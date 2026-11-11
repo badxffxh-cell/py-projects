@@ -264,7 +264,7 @@ class TerminalEngine:
     def _usb(self, args) -> EngineResponse:
         sub = args[0].lower() if args else "status"
         if sub != "status":
-            return EngineResponse(f"[ERROR] try: usb status", ok=False)
+            return EngineResponse("[ERROR] try: usb status", ok=False)
         res = usb_mod.status()
         if not res.ok:
             return EngineResponse(_fmt_result_error(res), ok=False)

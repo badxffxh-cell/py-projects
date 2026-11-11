@@ -18,7 +18,6 @@ from PySide6.QtCore import QObject, QRunnable, Qt, QThreadPool, QTimer, Signal
 from PySide6.QtWidgets import (
     QGridLayout,
     QGroupBox,
-    QHBoxLayout,
     QLabel,
     QProgressBar,
     QPushButton,

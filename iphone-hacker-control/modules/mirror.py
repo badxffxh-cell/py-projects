@@ -28,7 +28,6 @@ import threading
 import time
 from typing import Callable, Optional
 
-from . import core
 from .core import Result
 from .logging_setup import get_logger
 
