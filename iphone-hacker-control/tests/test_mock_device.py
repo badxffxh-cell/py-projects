@@ -191,7 +191,7 @@ def test_terminal_device_info_ios27(mocked_device):
     out = TerminalEngine(DeviceManager()).execute("device info").text
     assert "27.0" in out
     assert "iPhone18,2" in out
-    assert "(not mapped)" in out  # marketing not invented
+    assert "(não mapeado)" in out  # marketing not invented
 
 
 def test_reboot_confirmed_calls_restart(mocked_device):

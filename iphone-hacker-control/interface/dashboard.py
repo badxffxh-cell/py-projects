@@ -28,7 +28,7 @@ from PySide6.QtWidgets import (
 from . import styles
 from modules.device import DeviceManager
 
-_PLACEHOLDER = "— (no device)"
+_PLACEHOLDER = "— (sem dispositivo)"
 
 
 class _SnapshotSignals(QObject):
@@ -82,37 +82,37 @@ class Dashboard(QWidget):
         root.setContentsMargins(6, 6, 6, 6)
         root.setSpacing(8)
 
-        # Connection panel
-        conn = QGroupBox("Connection")
+        # Painel de conexão
+        conn = QGroupBox("Conexão")
         cg = QGridLayout(conn)
-        self.state_value = QLabel("DISCONNECTED")
+        self.state_value = QLabel("DESCONECTADO")
         self.state_value.setObjectName("StatusDisconnected")
-        l0 = QLabel("State"); l0.setObjectName("DataLabel")
+        l0 = QLabel("Estado"); l0.setObjectName("DataLabel")
         cg.addWidget(l0, 0, 0)
         cg.addWidget(self.state_value, 0, 1)
-        self._name_l, self.name_value = _field("Device")
+        self._name_l, self.name_value = _field("Dispositivo")
         cg.addWidget(self._name_l, 1, 0); cg.addWidget(self.name_value, 1, 1)
         self._serial_l, self.serial_value = _field("Serial/UDID")
         cg.addWidget(self._serial_l, 2, 0); cg.addWidget(self.serial_value, 2, 1)
-        self._uptime_l, self.uptime_value = _field("Connected for")
+        self._uptime_l, self.uptime_value = _field("Conectado há")
         cg.addWidget(self._uptime_l, 3, 0); cg.addWidget(self.uptime_value, 3, 1)
         root.addWidget(conn)
 
-        # Device info panel
-        info = QGroupBox("Device")
+        # Painel de informações do dispositivo
+        info = QGroupBox("Dispositivo")
         ig = QGridLayout(info)
-        self._model_l, self.model_value = _field("Model")
+        self._model_l, self.model_value = _field("Modelo")
         ig.addWidget(self._model_l, 0, 0); ig.addWidget(self.model_value, 0, 1)
-        self._ptype_l, self.ptype_value = _field("Identifier")
+        self._ptype_l, self.ptype_value = _field("Identificador")
         ig.addWidget(self._ptype_l, 1, 0); ig.addWidget(self.ptype_value, 1, 1)
-        self._ios_l, self.ios_value = _field("iOS version")
+        self._ios_l, self.ios_value = _field("Versão do iOS")
         ig.addWidget(self._ios_l, 2, 0); ig.addWidget(self.ios_value, 2, 1)
         self._build_l, self.build_value = _field("Build")
         ig.addWidget(self._build_l, 3, 0); ig.addWidget(self.build_value, 3, 1)
         root.addWidget(info)
 
-        # Battery panel
-        bat = QGroupBox("Battery")
+        # Painel de bateria
+        bat = QGroupBox("Bateria")
         bg = QVBoxLayout(bat)
         self.battery_bar = QProgressBar()
         self.battery_bar.setRange(0, 100)
@@ -124,8 +124,8 @@ class Dashboard(QWidget):
         bg.addWidget(self.battery_state)
         root.addWidget(bat)
 
-        # Storage panel
-        stor = QGroupBox("Storage")
+        # Painel de armazenamento
+        stor = QGroupBox("Armazenamento")
         sg = QVBoxLayout(stor)
         self.storage_bar = QProgressBar()
         self.storage_bar.setRange(0, 100)
@@ -137,22 +137,22 @@ class Dashboard(QWidget):
         sg.addWidget(self.storage_text)
         root.addWidget(stor)
 
-        # Network panel
-        net = QGroupBox("Network")
+        # Painel de rede
+        net = QGroupBox("Rede")
         ng = QGridLayout(net)
-        self._wmac_l, self.wmac_value = _field("Wi-Fi MAC")
+        self._wmac_l, self.wmac_value = _field("MAC Wi-Fi")
         ng.addWidget(self._wmac_l, 0, 0); ng.addWidget(self.wmac_value, 0, 1)
         root.addWidget(net)
 
-        # Actions
-        actions = QGroupBox("Actions")
+        # Ações
+        actions = QGroupBox("Ações")
         ag = QGridLayout(actions)
-        self.btn_detect = QPushButton("Detect")
-        self.btn_refresh = QPushButton("Refresh")
-        self.btn_screenshot = QPushButton("Screenshot")
-        self.btn_mirror = QPushButton("Mirror")
-        self.btn_diag = QPushButton("Diagnostics")
-        self.btn_reboot = QPushButton("Reboot")
+        self.btn_detect = QPushButton("Detectar")
+        self.btn_refresh = QPushButton("Atualizar")
+        self.btn_screenshot = QPushButton("Captura")
+        self.btn_mirror = QPushButton("Espelhar")
+        self.btn_diag = QPushButton("Diagnóstico")
+        self.btn_reboot = QPushButton("Reiniciar")
         self.btn_detect.clicked.connect(lambda: self.run_command.emit("device"))
         self.btn_refresh.clicked.connect(self.refresh)
         self.btn_screenshot.clicked.connect(
@@ -198,37 +198,37 @@ class Dashboard(QWidget):
             self.battery_bar.setFormat(f"{int(pct)}%")
             charging = bat.get("IsCharging")
             ext = bat.get("ExternalConnected")
-            state = "charging" if charging else (
-                "on external power" if ext else "on battery")
+            state = "carregando" if charging else (
+                "na energia externa" if ext else "na bateria")
             self.battery_state.setText(state)
         else:
-            self.battery_bar.setFormat("n/a")
-            self.battery_state.setText("battery info unavailable")
+            self.battery_bar.setFormat("n/d")
+            self.battery_state.setText("info de bateria indisponível")
 
         stor = data.get("storage")
         if stor:
             self.storage_text.setText(
-                f"{stor.get('available')} free of {stor.get('total')}")
+                f"{stor.get('available')} livres de {stor.get('total')}")
         else:
-            self.storage_text.setText("storage info unavailable")
+            self.storage_text.setText("info de armazenamento indisponível")
 
         net = data.get("network") or {}
-        self.wmac_value.setText(net.get("WiFiAddress") or "n/a")
+        self.wmac_value.setText(net.get("WiFiAddress") or "n/d")
 
     def _set_connected(self, info: dict) -> None:
         if not self._connected:
             self._connected = True
             self.status_changed.emit(True)
-        self.state_value.setText("CONNECTED")
+        self.state_value.setText("CONECTADO")
         self.state_value.setObjectName("StatusConnected")
         self.state_value.setStyleSheet(f"color:{styles.GREEN_BRIGHT};font-weight:bold;")
         self.name_value.setText(info.get("DeviceName") or "iPhone")
-        self.serial_value.setText(info.get("UniqueDeviceID") or "n/a")
+        self.serial_value.setText(info.get("UniqueDeviceID") or "n/d")
         model = info.get("MarketingName") or info.get("ProductType") or "n/a"
         self.model_value.setText(model)
-        self.ptype_value.setText(info.get("ProductType") or "n/a")
-        self.ios_value.setText(info.get("ProductVersion") or "n/a")
-        self.build_value.setText(info.get("BuildVersion") or "n/a")
+        self.ptype_value.setText(info.get("ProductType") or "n/d")
+        self.ios_value.setText(info.get("ProductVersion") or "n/d")
+        self.build_value.setText(info.get("BuildVersion") or "n/d")
         up = self.device.uptime_seconds
         if up is not None:
             self.uptime_value.setText(time.strftime("%H:%M:%S", time.gmtime(up)))
@@ -237,7 +237,7 @@ class Dashboard(QWidget):
         if self._connected:
             self._connected = False
             self.status_changed.emit(False)
-        self.state_value.setText("DISCONNECTED")
+        self.state_value.setText("DESCONECTADO")
         self.state_value.setStyleSheet(f"color:{styles.AMBER};font-weight:bold;")
         for v in (self.name_value, self.serial_value, self.uptime_value,
                   self.model_value, self.ptype_value, self.ios_value,

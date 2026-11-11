@@ -31,13 +31,13 @@ def host_report() -> dict:
 
         pyside = getattr(__import__("PySide6"), "__version__", "present")
     except Exception as exc:
-        pyside = f"missing ({type(exc).__name__})"
+        pyside = f"ausente ({type(exc).__name__})"
     return {
-        "os": f"{platform.system()} {platform.release()}",
-        "os_version": platform.version(),
-        "machine": platform.machine(),
-        "python": sys.version.split()[0],
-        "pymobiledevice3": version if available else f"missing ({err})",
+        "SO": f"{platform.system()} {platform.release()}",
+        "Versão do SO": platform.version(),
+        "Arquitetura": platform.machine(),
+        "Python": sys.version.split()[0],
+        "pymobiledevice3": version if available else f"ausente ({err})",
         "PySide6": pyside,
     }
 
@@ -56,11 +56,11 @@ def full_report(device: Optional[DeviceManager] = None) -> Result:
     }
 
     if not detect.ok or (detect.ok and detect.meta.get("count", 0) == 0):
-        # Diagnostic mode: no device. This is a valid, non-error state.
-        report["mode"] = "diagnostic (no device connected)"
+        # Modo diagnóstico: nenhum dispositivo. Estado válido, não é erro.
+        report["mode"] = "diagnóstico (nenhum dispositivo conectado)"
         return Result.success(report)
 
-    report["mode"] = "connected"
+    report["mode"] = "conectado"
     info = dev.info()
     if info.ok:
         report["device"] = info.data

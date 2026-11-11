@@ -1,134 +1,141 @@
 # IPHONE HACKER CONTROL
 
-A Windows desktop tool to **connect, diagnose, screenshot and mirror your own
-iPhone**, wrapped in a classic green-on-black "Matrix" terminal interface.
+Ferramenta de desktop para Windows para **conectar, diagnosticar, capturar e
+espelhar o seu próprio iPhone**, com uma interface de terminal clássica estilo
+"Matrix" (verde sobre preto).
 
-It is built on the open, documented [`pymobiledevice3`](https://github.com/doronz88/pymobiledevice3)
-library and talks to the device over the same `usbmux`/`lockdown` channel that
-Apple's own tools use. **No jailbreak, no exploits, no lock/Face ID bypass.**
-It only does what the operating system permits for a *trusted* computer that the
-device's owner has authorized.
+É construída sobre a biblioteca aberta e documentada
+[`pymobiledevice3`](https://github.com/doronz88/pymobiledevice3) e conversa com
+o dispositivo pelo mesmo canal `usbmux`/`lockdown` que as próprias ferramentas
+da Apple usam. **Sem jailbreak, sem exploits, sem bypass de bloqueio/Face ID.**
+Ela faz apenas o que o sistema operacional permite a um computador *confiável*
+autorizado pelo dono do dispositivo.
 
-> ⚠️ **Honest scope.** iOS is a locked-down platform. This program gives you
-> real diagnostics and a read-only screen mirror, but it **cannot** provide
-> universal remote touch control, extract app data, or bypass any protection.
-> Where a capability is not available, the app tells you so plainly instead of
-> faking a result.
-
----
-
-## Table of contents
-1. [Features](#features)
-2. [What needs an iPhone connected](#what-needs-an-iphone-connected)
-3. [Project structure](#project-structure)
-4. [Requirements](#requirements)
-5. [Install](#install)
-6. [Run](#run)
-7. [Connecting over USB](#connecting-over-usb)
-8. [Configuring Wi-Fi (wireless) access](#configuring-wi-fi-wireless-access)
-9. [Terminal commands](#terminal-commands)
-10. [Mirroring & control](#mirroring--control)
-11. [Building a standalone .exe](#building-a-standalone-exe)
-12. [Compatibility & limitations](#compatibility--limitations)
-13. [Security & privacy](#security--privacy)
-14. [Troubleshooting](#troubleshooting)
+> ⚠️ **Escopo honesto.** O iOS é uma plataforma fechada. Este programa oferece
+> diagnósticos reais e um espelhamento de tela somente leitura, mas **não pode**
+> fornecer controle de toque remoto universal, extrair dados de apps nem burlar
+> qualquer proteção. Onde um recurso não está disponível, o app diz isso
+> claramente, em vez de forjar um resultado.
 
 ---
 
-## Features
-
-**Always available (even with no device):**
-- Matrix boot animation, blinking cursor, neon-green monospace UI.
-- Integrated terminal with real command parsing, history and validation.
-- Host + dependency diagnostics (`system diagnostics`).
-- Honest error reporting with actionable hints. Errors are never hidden.
-- Runs in **diagnostic mode** when no iPhone is connected — it never invents one.
-
-**Available when an authorized iPhone is connected:**
-- Automatic USB detection and model / iOS identification.
-- Battery, storage, and network (MAC) information.
-- Device screenshot capture (subject to iOS permissions).
-- Live, read-only screen mirror (polled screenshots).
-- Pairing / trust status and connection diagnostics.
-- Device reboot (explicit confirmation required).
-- Wi-Fi sync enablement and wireless reconnection.
+## Índice
+1. [Recursos](#recursos)
+2. [O que precisa do iPhone conectado](#o-que-precisa-do-iphone-conectado)
+3. [Estrutura do projeto](#estrutura-do-projeto)
+4. [Requisitos](#requisitos)
+5. [Instalação](#instalação)
+6. [Execução](#execução)
+7. [Conectando por USB](#conectando-por-usb)
+8. [Configurando o Wi-Fi (sem fio)](#configurando-o-wi-fi-sem-fio)
+9. [Comandos do terminal](#comandos-do-terminal)
+10. [Espelhamento e controle](#espelhamento-e-controle)
+11. [Gerando um .exe standalone](#gerando-um-exe-standalone)
+12. [Compatibilidade e limitações](#compatibilidade-e-limitações)
+13. [Segurança e privacidade](#segurança-e-privacidade)
+14. [Solução de problemas](#solução-de-problemas)
 
 ---
 
-## What needs an iPhone connected
+## Recursos
 
-| Feature | Works without device | Needs device |
-|--------|:--------------------:|:------------:|
-| Matrix UI, terminal, help | ✅ | |
-| `system diagnostics` (host section) | ✅ | |
-| Dependency / environment checks | ✅ | |
-| Device detection (`device`, `usb status`) | ✅ (reports 0) | ✅ shows real data |
+**Sempre disponível (mesmo sem dispositivo):**
+- Animação de inicialização Matrix, cursor piscando, UI verde neon monoespaçada.
+- Terminal integrado com interpretação real de comandos, histórico e validação.
+- Diagnóstico de host + dependências (`system diagnostics`).
+- Relato honesto de erros com dicas práticas. Erros nunca são escondidos.
+- Funciona em **modo diagnóstico** quando nenhum iPhone está conectado — nunca
+  inventa um dispositivo.
+
+**Disponível quando um iPhone autorizado está conectado:**
+- Detecção automática por USB e identificação de modelo / iOS.
+- Informações de bateria, armazenamento e rede (MAC).
+- Captura de tela do dispositivo (sujeito às permissões do iOS).
+- Espelhamento de tela ao vivo, somente leitura (captura por polling).
+- Status de pareamento / confiança e diagnóstico de conexão.
+- Reinício do dispositivo (exige confirmação explícita).
+- Ativação do sync por Wi-Fi e reconexão sem fio.
+
+> As **palavras de comando** (help, device, usb status, ...) permanecem em
+> inglês por serem a API definida do terminal; todo o texto exibido está em
+> português.
+
+---
+
+## O que precisa do iPhone conectado
+
+| Recurso | Funciona sem dispositivo | Precisa do dispositivo |
+|--------|:-----------------------:|:----------------------:|
+| UI Matrix, terminal, help | ✅ | |
+| `system diagnostics` (seção host) | ✅ | |
+| Checagens de dependências/ambiente | ✅ | |
+| Detecção (`device`, `usb status`) | ✅ (informa 0) | ✅ mostra dados reais |
 | `device info/battery/storage/network` | | ✅ |
 | `device screenshot` | | ✅ |
 | `mirror start` | | ✅ |
 | `device reboot` | | ✅ |
-| `wifi status` / Wi-Fi sync | | ✅ |
+| `wifi status` / sync Wi-Fi | | ✅ |
 
 ---
 
-## Project structure
+## Estrutura do projeto
 
 ```
 iphone-hacker-control/
-├─ main.py                 Entry point: splash -> checks -> detect -> UI
+├─ main.py                 Ponto de entrada: splash -> checagens -> detecção -> UI
 ├─ requirements.txt
-├─ install.bat             Create venv + install dependencies (Windows)
-├─ start.bat               Launch the app (Windows)
-├─ build_exe.bat           Build a standalone .exe with PyInstaller
+├─ install.bat             Cria venv + instala dependências (Windows)
+├─ start.bat               Inicia o app (Windows)
+├─ build_exe.bat           Gera um .exe standalone com PyInstaller
 ├─ README.md
-├─ modules/                Backend (GUI-free, unit-tested)
-│  ├─ core.py              Async backend: usbmux/lockdown, Result, run_sync
+├─ modules/                Backend (sem GUI, testado por unidade)
+│  ├─ core.py              Backend async: usbmux/lockdown, Result, run_sync
 │  ├─ device.py            DeviceManager: info/battery/storage/network/reboot
-│  ├─ usb.py               USB status + pairing/trust check
-│  ├─ wifi.py              Wi-Fi discovery, sync enable, link-quality probe
-│  ├─ screenshot.py        Screenshot capture (PNG)
-│  ├─ mirror.py            Screen-mirror controller (polled frames)
-│  ├─ diagnostics.py       Host + device diagnostic report
-│  ├─ terminal.py          Command engine (pure logic, testable)
-│  └─ logging_setup.py     Rotating file logging
-├─ interface/              PySide6 GUI
-│  ├─ main_window.py       Window, title bar, mirror window
-│  ├─ dashboard.py         Live info panels + action buttons
-│  ├─ terminal_widget.py   Terminal panel (threaded command execution)
-│  ├─ matrix_rain.py       Matrix rain animation + boot splash backdrop
-│  └─ styles.py            Theme / stylesheet
-├─ logs/                   Runtime logs (git-ignored)
-└─ tests/                  Headless unit tests (pytest)
+│  ├─ usb.py               Status USB + checagem de pareamento/confiança
+│  ├─ wifi.py              Descoberta Wi-Fi, ativar sync, medição de qualidade
+│  ├─ screenshot.py        Captura de tela (PNG)
+│  ├─ mirror.py            Controlador de espelhamento (quadros por polling)
+│  ├─ diagnostics.py       Relatório de diagnóstico host + dispositivo
+│  ├─ terminal.py          Motor de comandos (lógica pura, testável)
+│  └─ logging_setup.py     Log em arquivo com rotação
+├─ interface/              GUI em PySide6
+│  ├─ main_window.py       Janela, barra de título, janela de espelhamento
+│  ├─ dashboard.py         Painéis de informação ao vivo + botões de ação
+│  ├─ terminal_widget.py   Painel de terminal (execução em thread)
+│  ├─ matrix_rain.py       Animação Matrix + fundo da tela de inicialização
+│  └─ styles.py            Tema / folha de estilo
+├─ logs/                   Logs de execução (ignorado pelo git)
+└─ tests/                  Testes de unidade sem tela (pytest)
 ```
 
 ---
 
-## Requirements
+## Requisitos
 
-- **Windows 10 / 11** (the GUI and `.bat` scripts target Windows; the Python
-  code itself is cross-platform).
-- **Python 3.10+** (3.12+ recommended). Get it from
-  [python.org](https://www.python.org/downloads/) and tick
-  *"Add python.exe to PATH"* during setup.
-- **Apple Devices app or iTunes** installed, so the **Apple Mobile Device
-  Service** (the Windows `usbmuxd`) is present and running. This is what lets
-  Windows talk to the iPhone over USB.
+- **Windows 10 / 11** (a GUI e os `.bat` são para Windows; o código Python em si
+  é multiplataforma).
+- **Python 3.10+** (3.12+ recomendado). Baixe em
+  [python.org](https://www.python.org/downloads/) e marque
+  *"Add python.exe to PATH"* durante a instalação.
+- **App Apple Devices ou iTunes** instalado, para que o **Apple Mobile Device
+  Service** (o `usbmuxd` do Windows) exista e esteja em execução. É ele que
+  permite ao Windows falar com o iPhone por USB.
 
-Python dependencies (installed automatically): `PySide6`, `pymobiledevice3`.
+Dependências Python (instaladas automaticamente): `PySide6`, `pymobiledevice3`.
 
 ---
 
-## Install
+## Instalação
 
-1. Download / clone this folder.
-2. Double-click **`install.bat`** (or run it from a terminal).
-   It will:
-   - find your Python,
-   - create a local virtual environment in `.venv`,
-   - install the dependencies,
-   - verify the install.
+1. Baixe / clone esta pasta.
+2. Dê dois cliques em **`install.bat`** (ou execute-o pelo terminal).
+   Ele vai:
+   - encontrar o seu Python,
+   - criar um ambiente virtual local em `.venv`,
+   - instalar as dependências,
+   - verificar a instalação.
 
-Manual alternative:
+Alternativa manual:
 ```bat
 python -m venv .venv
 .venv\Scripts\activate
@@ -137,121 +144,124 @@ pip install -r requirements.txt
 
 ---
 
-## Run
+## Execução
 
-Double-click **`start.bat`**, or:
+Dê dois cliques em **`start.bat`**, ou:
 ```bat
 .venv\Scripts\python main.py
 ```
 
-Useful flags:
+Flags úteis:
 ```bat
-python main.py --no-splash     REM skip the boot animation
-python main.py --selftest      REM headless backend self-test (no GUI), prints results
+python main.py --no-splash     REM pula a animação de inicialização
+python main.py --selftest      REM autoteste do backend (sem GUI), imprime resultados
 ```
 
-On launch you'll see the Matrix boot sequence, a dependency check, a device
-probe, then the dashboard + terminal. If no iPhone is connected it opens in
-diagnostic mode.
+Ao iniciar você verá a sequência Matrix, uma checagem de dependências, uma sonda
+de dispositivo e então o dashboard + terminal. Sem iPhone conectado, abre em modo
+diagnóstico.
 
 ---
 
-## Connecting over USB
+## Conectando por USB
 
-1. Install the **Apple Devices** app (Microsoft Store) or **iTunes**, so the
-   Apple Mobile Device Service is running.
-2. Plug the iPhone into the PC with a **data-capable** USB cable.
-3. **Unlock** the iPhone. When it shows *"Trust This Computer?"*, tap
-   **Trust** and enter your passcode.
-4. In the app, run `device` (or press **DETECT**). Your device should appear.
-5. Run `device info`, `device battery`, `device storage` for live data.
+1. Instale o app **Apple Devices** (Microsoft Store) ou o **iTunes**, para que o
+   Apple Mobile Device Service esteja em execução.
+2. Conecte o iPhone ao PC com um cabo USB **de dados**.
+3. **Desbloqueie** o iPhone. Quando aparecer *"Confiar neste computador?"*, toque
+   em **Confiar** e digite sua senha.
+4. No app, execute `device` (ou clique em **DETECTAR**). Seu dispositivo deve
+   aparecer.
+5. Execute `device info`, `device battery`, `device storage` para dados ao vivo.
 
-If `usb status` reports that usbmuxd is unreachable, the Apple Mobile Device
-Service is not installed/running — install the Apple Devices app or iTunes.
-
----
-
-## Configuring Wi-Fi (wireless) access
-
-Wireless access reuses the USB pairing, so you must pair over USB **first**:
-
-1. Connect over USB and trust the computer (steps above).
-2. Enable wireless sync. Either:
-   - In the app terminal, this build exposes the backend helper used by the
-     dashboard; or
-   - In Finder/iTunes, enable *"Show this iPhone when on Wi-Fi"*.
-3. Keep the iPhone and PC on the **same Wi-Fi network**.
-4. You may now unplug USB. Run `wifi status` to see the device advertised over
-   the network. Diagnostics and screenshots then work wirelessly.
-
-`wifi status` lists only devices that are actually visible on the network — it
-does not fabricate a wireless device.
+Se `usb status` informar que o usbmuxd está inacessível, o Apple Mobile Device
+Service não está instalado/rodando — instale o app Apple Devices ou o iTunes.
 
 ---
 
-## Terminal commands
+## Configurando o Wi-Fi (sem fio)
+
+O acesso sem fio reutiliza o pareamento USB, então pareie por USB **primeiro**:
+
+1. Conecte por USB e confie no computador (passos acima).
+2. Ative o sync sem fio. Opções:
+   - No terminal do app, este build expõe o helper de backend usado pelo
+     dashboard; ou
+   - No Finder/iTunes, ative *"Mostrar este iPhone quando no Wi-Fi"*.
+3. Mantenha iPhone e PC na **mesma rede Wi-Fi**.
+4. Agora você pode desconectar o USB. Execute `wifi status` para ver o
+   dispositivo anunciado na rede. Diagnóstico e capturas passam a funcionar sem
+   fio.
+
+`wifi status` lista somente dispositivos realmente visíveis na rede — não inventa
+um dispositivo sem fio.
+
+---
+
+## Comandos do terminal
 
 ```
-help                 Show the command reference
-clear                Clear the terminal screen
-device               List detected Apple devices
-device info          Model, iOS version, identifiers
-device battery       Battery level and charging state
-device storage       Disk capacity and free space
-device network       Wi-Fi/Bluetooth MAC and link info
-device screenshot    Capture a PNG from the device (saved to screenshots/)
-device reboot --yes  Restart the device (confirmation required)
-usb status           USB connection + usbmux service state
-wifi status          Network-visible devices (needs Wi-Fi sync)
-system diagnostics   Full host + device diagnostic report
-logs                 Show the log file path and last lines
-mirror start         Open the live screen-mirror window
-mirror stop          Close the screen-mirror window
-exit                 Quit the application
+help                 Mostrar a referência de comandos
+clear                Limpar a tela do terminal
+device               Listar dispositivos Apple detectados
+device info          Modelo, versão do iOS, identificadores
+device battery       Nível da bateria e estado de carga
+device storage       Capacidade de armazenamento e espaço livre
+device network       MAC Wi-Fi/Bluetooth e informações de rede
+device screenshot    Capturar um PNG do dispositivo (salvo em screenshots/)
+device reboot --yes  Reiniciar o dispositivo (exige confirmação)
+usb status           Conexão USB + estado do serviço usbmux
+wifi status          Dispositivos visíveis na rede (requer sync Wi-Fi)
+system diagnostics   Relatório completo de diagnóstico (host + dispositivo)
+logs                 Mostrar o caminho do log e as últimas linhas
+mirror start         Abrir a janela de espelhamento de tela
+mirror stop          Fechar a janela de espelhamento de tela
+exit                 Sair do aplicativo
 ```
 
-Commands that change the device (e.g. `device reboot`) require explicit
-confirmation. Unknown commands produce a helpful message, never a crash.
+Comandos que alteram o dispositivo (ex.: `device reboot`) exigem confirmação
+explícita. Comandos desconhecidos geram uma mensagem útil, nunca uma falha.
 
 ---
 
-## Mirroring & control
+## Espelhamento e controle
 
-`mirror start` opens a window that shows your device screen by polling the iOS
-**screenshot service** a few frames per second. It is a **live, read-only**
-view — fine for watching the screen, demos, and diagnostics.
+`mirror start` abre uma janela que mostra a tela do dispositivo fazendo polling
+do **serviço de captura** do iOS a alguns quadros por segundo. É uma visão **ao
+vivo e somente leitura** — boa para acompanhar a tela, demos e diagnóstico.
 
-**About touch control (honest answer).** This build does **not** inject taps,
-swipes or keystrokes. iOS provides no general-purpose remote-input channel to a
-trusted host over lockdown. Real input automation requires an Apple-signed
-**WebDriverAgent** session (as used by Appium/`pymobiledevice3`'s WDA tunnel),
-which needs Developer Mode and Xcode code-signing set up by you — it is a
-separate, user-driven process and is **not bundled** here. Clicking the mirror
-reports this clearly rather than silently doing nothing.
+**Sobre o controle por toque (resposta honesta).** Este build **não** injeta
+toques, deslizes ou teclas. O iOS não oferece um canal geral de entrada remota a
+um host confiável via lockdown. A automação real de entrada exige uma sessão
+**WebDriverAgent** assinada pela Apple (como a usada pelo Appium / túnel WDA do
+`pymobiledevice3`), que precisa do Modo de Desenvolvedor e assinatura no Xcode
+configurados por você — é um processo separado e **não incluído** aqui. Clicar no
+espelhamento informa isso claramente, em vez de simular um toque.
 
-> The **iDesktop** product was evaluated as a mirroring/control mechanism. It is
-> a closed, third-party stack and is not integrated here; this project uses the
-> open, documented screenshot service instead so its behavior is transparent
-> and auditable.
+> O produto **iDesktop** foi avaliado como mecanismo de espelhamento/controle. É
+> uma solução fechada de terceiros e não foi integrada aqui; este projeto usa o
+> serviço de captura aberto e documentado, para que o comportamento seja
+> transparente e auditável.
 
-Mirroring respects iOS limits: protected screens (passcode/lock screen, DRM
-video, some camera and secure views, apps that block capture) may appear blank
-or fail to capture. That is reported, not hidden.
+O espelhamento respeita os limites do iOS: telas protegidas (bloqueio/senha,
+vídeo com DRM, algumas câmeras e telas seguras, apps que bloqueiam captura) podem
+aparecer em branco ou falhar na captura. Isso é informado, não escondido.
 
 ---
 
-## Building a standalone .exe
+## Gerando um .exe standalone
 
-1. Install and run the app at least once (so the venv exists).
-2. Double-click **`build_exe.bat`**. It installs PyInstaller and produces:
+1. Instale e execute o app ao menos uma vez (para que o venv exista).
+2. Dê dois cliques em **`build_exe.bat`**. Ele instala o PyInstaller e gera:
    ```
    dist\IphoneHackerControl\IphoneHackerControl.exe
    ```
-   A **one-folder** build is used because it starts faster and is far more
-   reliable for PySide6 than a single file. To attempt a single-file build, add
-   `--onefile` to the PyInstaller command in `build_exe.bat`.
+   É usado um build **em pasta única** (one-folder) porque inicia mais rápido e é
+   bem mais confiável para o PySide6 do que um arquivo único. Para tentar um
+   arquivo único, acrescente `--onefile` ao comando do PyInstaller em
+   `build_exe.bat`.
 
-Manual alternative:
+Alternativa manual:
 ```bat
 .venv\Scripts\activate
 pip install pyinstaller
@@ -261,61 +271,64 @@ pyinstaller --name IphoneHackerControl --windowed --clean --noconfirm ^
 
 ---
 
-## Compatibility & limitations
+## Compatibilidade e limitações
 
-- **iPhone 17 Pro Max / newer iOS:** The identity, battery, storage and network
-  queries use stable lockdown/diagnostics services that have worked across many
-  iOS generations and should work on current hardware. However, **this build
-  has not been tested against iOS 27**, and no feature is *claimed* to work on
-  an iOS version it was not tested on. The app reports the **actual**
-  `ProductVersion`/`ProductType` the device returns; it does not assert support
-  for an untested OS.
-- **Marketing names:** only well-known model identifiers are mapped to a
-  marketing name. For an unmapped identifier (e.g. a brand-new device), the app
-  shows the raw `ProductType` and the device's own name rather than guessing.
-- **iOS 17+ developer services:** screenshots and other developer services may
-  require **Developer Mode** (Settings → Privacy & Security → Developer Mode)
-  and, on recent iOS, a RemoteServiceDiscovery **tunnel** that needs
-  administrator privileges. If a capability needs that, the app says so.
-- **No remote input** without WebDriverAgent (see Mirroring above).
-
----
-
-## Security & privacy
-
-This tool is for use on **your own device, with your authorization**. It does
-**not** and will not:
-- bypass the lock screen, passcode or Face ID,
-- extract passwords or credentials,
-- intrude into devices you do not own,
-- exploit vulnerabilities or disable iOS protections,
-- access app data clandestinely.
-
-Privacy choices in this build:
-- No personal data is transmitted anywhere; everything stays local.
-- Screenshots are saved locally under `screenshots/` only when you ask.
-- Logs under `logs/` record operations and errors for troubleshooting and are
-  git-ignored. Delete them anytime.
-- `subprocess` is not used to run arbitrary or elevated commands.
+- **iPhone 17 Pro Max / iOS mais novo:** as consultas de identidade, bateria,
+  armazenamento e rede usam serviços estáveis de lockdown/diagnostics que
+  funcionam há muitas gerações do iOS e devem funcionar no hardware atual.
+  Porém, **este build não foi testado contra o iOS 27**, e nenhum recurso é
+  *declarado* funcional em uma versão do iOS que não foi testada. O app informa a
+  **versão real** (`ProductVersion`/`ProductType`) que o dispositivo retorna; ele
+  não afirma suporte a um SO não testado.
+- **Nomes comerciais:** apenas identificadores conhecidos são mapeados para um
+  nome comercial. Para um identificador não mapeado (ex.: um aparelho novíssimo),
+  o app mostra o `ProductType` cru e o nome do próprio aparelho em vez de
+  adivinhar.
+- **Serviços de desenvolvedor no iOS 17+:** capturas e outros serviços de
+  desenvolvedor podem exigir o **Modo de Desenvolvedor** (Ajustes → Privacidade e
+  Segurança → Modo de Desenvolvedor) e, no iOS recente, um **túnel**
+  RemoteServiceDiscovery que precisa de privilégios de administrador. Se um
+  recurso precisar disso, o app avisa.
+- **Sem entrada remota** sem WebDriverAgent (veja Espelhamento acima).
 
 ---
 
-## Troubleshooting
+## Segurança e privacidade
 
-| Symptom | Fix |
-|--------|-----|
-| "Could not query usbmuxd" | Install the Apple Devices app / iTunes; ensure *Apple Mobile Device Service* is running. |
-| Device not detected | Use a data USB cable, unlock the phone, tap **Trust**. |
-| "Trust"/pairing errors | Unlock the device and accept the trust prompt; re-pair over USB. |
-| Screenshot fails on iOS 17+ | Enable Developer Mode; a RSD tunnel (admin) may be required. |
-| GUI won't start | Re-run `install.bat`; check `logs/iphone-hacker-control.log`. |
-| Want raw logs | Run `logs` in the terminal, or open `logs/iphone-hacker-control.log`. |
+Esta ferramenta é para uso no **seu próprio dispositivo, com sua autorização**.
+Ela **não** faz e não fará:
+- bypass de tela de bloqueio, senha ou Face ID,
+- extração de senhas ou credenciais,
+- invasão de dispositivos que você não possui,
+- exploração de vulnerabilidades ou desativação de proteções do iOS,
+- acesso clandestino a dados de aplicativos.
+
+Decisões de privacidade neste build:
+- Nenhum dado pessoal é transmitido a lugar algum; tudo fica local.
+- Capturas são salvas localmente em `screenshots/` somente quando você pede.
+- Logs em `logs/` registram operações e erros para diagnóstico e são ignorados
+  pelo git. Apague-os quando quiser.
+- `subprocess` não é usado para executar comandos arbitrários ou elevados.
 
 ---
 
-### Developer notes
+## Solução de problemas
 
-- Run the headless tests: `python -m pytest tests/ -q`
-- Run a backend self-test without a GUI: `python main.py --selftest`
-- The backend (`modules/`) is intentionally GUI-free and async, driven through
-  `core.run_sync()`, so it is unit-testable without a device or a display.
+| Sintoma | Solução |
+|--------|---------|
+| "Não foi possível consultar o usbmuxd" | Instale o app Apple Devices / iTunes; garanta que o *Apple Mobile Device Service* esteja rodando. |
+| Dispositivo não detectado | Use um cabo USB de dados, desbloqueie o aparelho, toque em **Confiar**. |
+| Erros de pareamento/confiança | Desbloqueie o dispositivo e aceite o aviso de confiança; repareie por USB. |
+| Captura falha no iOS 17+ | Ative o Modo de Desenvolvedor; pode ser necessário um túnel RSD (admin). |
+| A GUI não inicia | Rode `install.bat` de novo; veja `logs/iphone-hacker-control.log`. |
+| Quero os logs crus | Execute `logs` no terminal, ou abra `logs/iphone-hacker-control.log`. |
+
+---
+
+### Notas para desenvolvedores
+
+- Rodar os testes sem tela: `python -m pytest tests/ -q`
+- Autoteste do backend sem GUI: `python main.py --selftest`
+- O backend (`modules/`) é propositalmente livre de GUI e assíncrono, acionado
+  por `core.run_sync()`, de modo a ser testável por unidade sem dispositivo ou
+  tela.

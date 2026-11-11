@@ -144,11 +144,13 @@ class MirrorController:
         """Input injection is not available without WebDriverAgent (see module
         docstring). This is reported honestly rather than faked."""
         return Result.failure(
-            "Remote input (tap/drag/type) is not available in this build.",
+            "Entrada remota (toque/arrastar/digitar) não está disponível nesta "
+            "versão.",
             error_type="InputNotSupported",
             hint=(
-                "iOS has no general lockdown input channel. Touch control "
-                "requires an Apple-signed WebDriverAgent automation session "
-                "(Developer Mode + Xcode signing), which is not bundled here."
+                "O iOS não tem um canal de entrada geral via lockdown. O "
+                "controle por toque exige uma sessão de automação WebDriverAgent "
+                "assinada pela Apple (Modo de Desenvolvedor + assinatura no "
+                "Xcode), que não está incluída aqui."
             ),
         )

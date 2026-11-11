@@ -46,7 +46,8 @@ def status() -> Result:
             {"serial": d.serial, "connection": d.connection_type} for d in net
         ],
         "note": (
-            "A device appears here only after USB pairing + enabling Wi-Fi sync."
+            "Um dispositivo aparece aqui apenas após o pareamento USB e a "
+            "ativação do sync por Wi-Fi."
         ),
     }
     return Result.success(data, network_count=len(net))
@@ -77,10 +78,10 @@ def enable_wifi_sync(serial: Optional[str] = None, enable: bool = True) -> Resul
                 await client.close()
             except Exception:
                 pass
-        state = "enabled" if enable else "disabled"
+        state = "ativado" if enable else "desativado"
         return Result.success(
-            f"Wi-Fi sync {state}. The device may take a moment to advertise "
-            "over the local network."
+            f"Sync por Wi-Fi {state}. O dispositivo pode levar um momento para "
+            "anunciar-se na rede local."
         )
 
     try:
@@ -114,13 +115,13 @@ def connection_quality(serial: Optional[str] = None, samples: int = 5) -> Result
 
         avg = statistics.mean(timings)
         if avg < 15:
-            label = "excellent"
+            label = "excelente"
         elif avg < 40:
-            label = "good"
+            label = "boa"
         elif avg < 120:
-            label = "fair"
+            label = "razoável"
         else:
-            label = "poor"
+            label = "ruim"
         return Result.success(
             {
                 "samples": timings,

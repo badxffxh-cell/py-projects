@@ -42,7 +42,7 @@ class MirrorPanel(QDialog):
 
     def __init__(self, device: DeviceManager, parent: Optional[QWidget] = None) -> None:
         super().__init__(parent)
-        self.setWindowTitle("IPHONE HACKER CONTROL — Screen Mirror")
+        self.setWindowTitle("IPHONE HACKER CONTROL — Espelhamento de Tela")
         self.resize(360, 720)
         self.device = device
         self.controller = MirrorController()
@@ -51,7 +51,7 @@ class MirrorPanel(QDialog):
         self.bridge.error.connect(self._on_error)
 
         layout = QVBoxLayout(self)
-        self.screen = QLabel("Starting mirror…")
+        self.screen = QLabel("Iniciando espelhamento…")
         self.screen.setAlignment(Qt.AlignCenter)
         self.screen.setMinimumSize(320, 600)
         self.screen.setStyleSheet(
@@ -65,8 +65,8 @@ class MirrorPanel(QDialog):
         layout.addWidget(self.status)
 
         row = QHBoxLayout()
-        self.btn_start = QPushButton("Start")
-        self.btn_stop = QPushButton("Stop")
+        self.btn_start = QPushButton("Iniciar")
+        self.btn_stop = QPushButton("Parar")
         self.btn_start.clicked.connect(self.start)
         self.btn_stop.clicked.connect(self.stop)
         row.addWidget(self.btn_start)
@@ -74,23 +74,23 @@ class MirrorPanel(QDialog):
         layout.addLayout(row)
 
     def start(self) -> None:
-        self.status.setText("Connecting to device screenshot service…")
+        self.status.setText("Conectando ao serviço de captura do dispositivo…")
         res = self.controller.start(
             on_frame=lambda b: self.bridge.frame.emit(b),
             on_error=lambda r: self.bridge.error.emit(
-                (r.error or "error") + (f"\nHint: {r.hint}" if r.hint else "")),
+                (r.error or "erro") + (f"\nDica: {r.hint}" if r.hint else "")),
             serial=self.device.serial,
             fps=2.0,
         )
         if not res.ok:
-            self._on_error((res.error or "could not start") +
-                           (f"\nHint: {res.hint}" if res.hint else ""))
+            self._on_error((res.error or "não foi possível iniciar") +
+                           (f"\nDica: {res.hint}" if res.hint else ""))
         else:
-            self.status.setText("Mirror running (polled, read-only).")
+            self.status.setText("Espelhamento ativo (polling, somente leitura).")
 
     def stop(self) -> None:
         self.controller.stop()
-        self.status.setText("Mirror stopped.")
+        self.status.setText("Espelhamento parado.")
 
     def _on_frame(self, data: bytes) -> None:
         pix = QPixmap()
@@ -100,14 +100,14 @@ class MirrorPanel(QDialog):
                            Qt.SmoothTransformation))
 
     def _on_error(self, message: str) -> None:
-        self.screen.setText("Mirror unavailable")
-        self.status.setText(f"[ERROR] {message}")
+        self.screen.setText("Espelhamento indisponível")
+        self.status.setText(f"[ERRO] {message}")
 
     def _on_screen_click(self, event) -> None:
         # Honest: report that remote input needs WebDriverAgent, not silently do
         # nothing or fake a tap.
         res = self.controller.send_input()
-        self.status.setText(f"[input] {res.error}  ({res.hint})")
+        self.status.setText(f"[entrada] {res.error}  ({res.hint})")
 
     def closeEvent(self, event) -> None:  # noqa: N802
         self.controller.stop()
@@ -135,14 +135,14 @@ class MainWindow(QMainWindow):
         title_row = QHBoxLayout()
         title = QLabel("IPHONE HACKER CONTROL")
         title.setObjectName("TitleLabel")
-        subtitle = QLabel("secure device diagnostics • owner-authorized")
+        subtitle = QLabel("diagnóstico seguro de dispositivo • autorizado pelo proprietário")
         subtitle.setObjectName("SubtitleLabel")
         tbox = QVBoxLayout()
         tbox.addWidget(title)
         tbox.addWidget(subtitle)
         title_row.addLayout(tbox)
         title_row.addStretch(1)
-        self.header_status = QLabel("● DISCONNECTED")
+        self.header_status = QLabel("● DESCONECTADO")
         self.header_status.setObjectName("StatusDisconnected")
         title_row.addWidget(self.header_status, 0, Qt.AlignTop)
         root.addLayout(title_row)
@@ -168,11 +168,11 @@ class MainWindow(QMainWindow):
 
     def _on_status_changed(self, connected: bool) -> None:
         if connected:
-            self.header_status.setText("● CONNECTED")
+            self.header_status.setText("● CONECTADO")
             self.header_status.setStyleSheet(
                 f"color:{styles.GREEN_BRIGHT};font-weight:bold;")
         else:
-            self.header_status.setText("● DISCONNECTED")
+            self.header_status.setText("● DESCONECTADO")
             self.header_status.setStyleSheet(
                 f"color:{styles.AMBER};font-weight:bold;")
 

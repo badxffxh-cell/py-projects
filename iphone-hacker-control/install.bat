@@ -1,78 +1,78 @@
 @echo off
 REM ===================================================================
-REM  IPHONE HACKER CONTROL - dependency installer (Windows)
-REM  Creates a local virtual environment and installs requirements.
+REM  IPHONE HACKER CONTROL - instalador de dependencias (Windows)
+REM  Cria um ambiente virtual local e instala os requisitos.
 REM ===================================================================
 setlocal enabledelayedexpansion
-title IPHONE HACKER CONTROL - Installer
+title IPHONE HACKER CONTROL - Instalador
 cd /d "%~dp0"
 
 echo.
 echo  ===============================================
-echo   IPHONE HACKER CONTROL  -  Installer
+echo   IPHONE HACKER CONTROL  -  Instalador
 echo  ===============================================
 echo.
 
-REM --- 1. Locate a Python launcher ------------------------------------
+REM --- 1. Localizar um lancador do Python ----------------------------
 set "PY_CMD="
 where py >nul 2>nul && set "PY_CMD=py -3"
 if not defined PY_CMD (
     where python >nul 2>nul && set "PY_CMD=python"
 )
 if not defined PY_CMD (
-    echo [ERROR] Python was not found on PATH.
-    echo         Install Python 3.12+ from https://www.python.org/downloads/
-    echo         During setup, tick "Add python.exe to PATH".
+    echo [ERRO] Python nao foi encontrado no PATH.
+    echo        Instale o Python 3.12+ em https://www.python.org/downloads/
+    echo        Durante a instalacao, marque "Add python.exe to PATH".
     echo.
     pause
     exit /b 1
 )
-echo [ OK ] Using Python launcher: %PY_CMD%
+echo [ OK ] Usando o Python: %PY_CMD%
 %PY_CMD% --version
 
-REM --- 2. Create the virtual environment -----------------------------
+REM --- 2. Criar o ambiente virtual -----------------------------------
 if not exist ".venv\Scripts\python.exe" (
-    echo [INFO] Creating virtual environment in .venv ...
+    echo [INFO] Criando ambiente virtual em .venv ...
     %PY_CMD% -m venv .venv
     if errorlevel 1 (
-        echo [ERROR] Failed to create the virtual environment.
+        echo [ERRO] Falha ao criar o ambiente virtual.
         pause
         exit /b 1
     )
 ) else (
-    echo [ OK ] Virtual environment already exists.
+    echo [ OK ] Ambiente virtual ja existe.
 )
 
 set "VENV_PY=.venv\Scripts\python.exe"
 
-REM --- 3. Upgrade pip and install requirements -----------------------
-echo [INFO] Upgrading pip ...
+REM --- 3. Atualizar o pip e instalar os requisitos -------------------
+echo [INFO] Atualizando o pip ...
 "%VENV_PY%" -m pip install --upgrade pip
-echo [INFO] Installing dependencies (this can take a few minutes) ...
+echo [INFO] Instalando dependencias (pode levar alguns minutos) ...
 "%VENV_PY%" -m pip install -r requirements.txt
 if errorlevel 1 (
-    echo [ERROR] Dependency installation failed. See the messages above.
+    echo [ERRO] Falha na instalacao das dependencias. Veja as mensagens acima.
     pause
     exit /b 1
 )
 
-REM --- 4. Verify the install -----------------------------------------
-echo [INFO] Verifying installation ...
-"%VENV_PY%" -c "import PySide6, pymobiledevice3; print('[ OK ] PySide6 and pymobiledevice3 import correctly')"
+REM --- 4. Verificar a instalacao -------------------------------------
+echo [INFO] Verificando a instalacao ...
+"%VENV_PY%" -c "import PySide6, pymobiledevice3; print('[ OK ] PySide6 e pymobiledevice3 importam corretamente')"
 if errorlevel 1 (
-    echo [ERROR] Verification failed - the libraries did not import.
+    echo [ERRO] Verificacao falhou - as bibliotecas nao importaram.
     pause
     exit /b 1
 )
 
 echo.
 echo  ===============================================
-echo   Installation complete.
-echo   Run start.bat to launch IPHONE HACKER CONTROL.
+echo   Instalacao concluida.
+echo   Execute start.bat para abrir o IPHONE HACKER CONTROL.
 echo  ===============================================
 echo.
-echo  TIP: For USB device access, install Apple's "Apple Devices" app
-echo       (or iTunes) so the Apple Mobile Device Service is running.
+echo  DICA: Para acesso ao dispositivo por USB, instale o app "Apple Devices"
+echo        (ou o iTunes) para que o Apple Mobile Device Service rode.
 echo.
 pause
 endlocal

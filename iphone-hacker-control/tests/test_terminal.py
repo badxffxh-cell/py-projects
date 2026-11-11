@@ -32,7 +32,8 @@ def test_empty_line_is_noop():
 
 def test_help_lists_commands():
     r = make_engine().execute("help")
-    assert "command reference" in r.text
+    assert "referência de comandos" in r.text
+    # Command tokens stay in English (the defined terminal API).
     for cmd in ("device info", "usb status", "wifi status",
                 "mirror start", "system diagnostics"):
         assert cmd in r.text
@@ -51,21 +52,21 @@ def test_exit_returns_action():
 def test_unknown_command_is_handled():
     r = make_engine().execute("frobnicate")
     assert not r.ok
-    assert "unknown command" in r.text.lower()
+    assert "comando desconhecido" in r.text.lower()
 
 
 def test_unknown_subcommand_is_handled():
     r = make_engine().execute("device wibble")
     assert not r.ok
-    assert "unknown 'device' subcommand" in r.text.lower()
+    assert "subcomando 'device' desconhecido" in r.text.lower()
 
 
 def test_device_list_without_device_is_honest():
     # No device connected in CI: must say so, never invent one.
     r = make_engine().execute("device")
     text = r.text.lower()
-    assert ("no device" in text) or ("error" in text) or ("detected 0" in text) \
-        or ("could not query" in text)
+    assert ("nenhum dispositivo" in text) or ("erro" in text) \
+        or ("não foi possível consultar" in text)
     # Crucially, it must not print a fake iPhone model/serial.
     assert "iphone 17" not in text
 
@@ -78,7 +79,7 @@ def test_mirror_actions():
 
 def test_reboot_requires_confirmation():
     r = make_engine().execute("device reboot")
-    assert "restart the device" in r.text.lower()
+    assert "reiniciar o dispositivo" in r.text.lower()
     assert "--yes" in r.text
 
 
@@ -86,12 +87,12 @@ def test_system_diagnostics_runs_headless():
     r = make_engine().execute("system diagnostics")
     # Host section is always present; mode reflects no-device state.
     assert "Host:" in r.text
-    assert "diagnostics" in r.text.lower()
+    assert "diagnóstico" in r.text.lower()
 
 
 def test_logs_command():
     r = make_engine().execute("logs")
-    assert "Log file" in r.text
+    assert "Arquivo de log" in r.text
 
 
 def test_result_helpers():

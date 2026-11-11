@@ -1,14 +1,14 @@
 @echo off
 REM ===================================================================
-REM  IPHONE HACKER CONTROL - launcher (Windows)
+REM  IPHONE HACKER CONTROL - inicializador (Windows)
 REM ===================================================================
 setlocal
 title IPHONE HACKER CONTROL
 cd /d "%~dp0"
 
 if not exist ".venv\Scripts\python.exe" (
-    echo [ERROR] Virtual environment not found.
-    echo         Run install.bat first.
+    echo [ERRO] Ambiente virtual nao encontrado.
+    echo        Execute install.bat primeiro.
     echo.
     pause
     exit /b 1
@@ -16,19 +16,19 @@ if not exist ".venv\Scripts\python.exe" (
 
 set "VENV_PY=.venv\Scripts\python.exe"
 
-REM Quick dependency sanity check before launching the GUI.
+REM Checagem rapida de dependencias antes de abrir a GUI.
 "%VENV_PY%" -c "import PySide6, pymobiledevice3" 2>nul
 if errorlevel 1 (
-    echo [WARN] Dependencies missing or broken. Re-running install.bat is recommended.
-    echo        Launching anyway in diagnostic mode...
+    echo [AVISO] Dependencias ausentes ou quebradas. Recomenda-se rodar install.bat.
+    echo         Abrindo mesmo assim em modo diagnostico...
 )
 
-echo [INFO] Launching IPHONE HACKER CONTROL ...
+echo [INFO] Abrindo o IPHONE HACKER CONTROL ...
 "%VENV_PY%" main.py %*
 set "RC=%errorlevel%"
 if not "%RC%"=="0" (
     echo.
-    echo [INFO] Application exited with code %RC%.
+    echo [INFO] Aplicativo encerrou com codigo %RC%.
     pause
 )
 endlocal

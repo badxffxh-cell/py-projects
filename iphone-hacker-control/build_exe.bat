@@ -1,29 +1,29 @@
 @echo off
 REM ===================================================================
-REM  IPHONE HACKER CONTROL - build a standalone Windows .exe
-REM  Uses PyInstaller. Output: dist\IphoneHackerControl\IphoneHackerControl.exe
+REM  IPHONE HACKER CONTROL - gerar um .exe standalone para Windows
+REM  Usa PyInstaller. Saida: dist\IphoneHackerControl\IphoneHackerControl.exe
 REM ===================================================================
 setlocal
-title IPHONE HACKER CONTROL - Build EXE
+title IPHONE HACKER CONTROL - Gerar EXE
 cd /d "%~dp0"
 
 if not exist ".venv\Scripts\python.exe" (
-    echo [ERROR] Virtual environment not found. Run install.bat first.
+    echo [ERRO] Ambiente virtual nao encontrado. Execute install.bat primeiro.
     pause
     exit /b 1
 )
 set "VENV_PY=.venv\Scripts\python.exe"
 
-echo [INFO] Ensuring PyInstaller is installed ...
+echo [INFO] Garantindo que o PyInstaller esteja instalado ...
 "%VENV_PY%" -m pip install --upgrade pyinstaller
 if errorlevel 1 (
-    echo [ERROR] Could not install PyInstaller.
+    echo [ERRO] Nao foi possivel instalar o PyInstaller.
     pause
     exit /b 1
 )
 
-echo [INFO] Building executable ...
-REM --collect-all pulls in PySide6 plugins and pymobiledevice3 data files.
+echo [INFO] Gerando o executavel ...
+REM --collect-all inclui plugins do PySide6 e arquivos de dados do pymobiledevice3.
 "%VENV_PY%" -m PyInstaller ^
     --name IphoneHackerControl ^
     --noconfirm ^
@@ -34,20 +34,20 @@ REM --collect-all pulls in PySide6 plugins and pymobiledevice3 data files.
     main.py
 
 if errorlevel 1 (
-    echo [ERROR] Build failed. See the output above.
+    echo [ERRO] Falha na geracao. Veja a saida acima.
     pause
     exit /b 1
 )
 
 echo.
 echo  ===============================================
-echo   Build complete.
+echo   Geracao concluida.
 echo   EXE: dist\IphoneHackerControl\IphoneHackerControl.exe
 echo  ===============================================
 echo.
-echo  Note: a one-folder build (above) starts faster and is more reliable
-echo  for PySide6 than a single-file build. To attempt a single file, add
-echo  --onefile to the command above.
+echo  Obs.: um build em pasta unica (acima) inicia mais rapido e e mais
+echo  confiavel para o PySide6 do que um arquivo unico. Para tentar arquivo
+echo  unico, acrescente --onefile ao comando acima.
 echo.
 pause
 endlocal

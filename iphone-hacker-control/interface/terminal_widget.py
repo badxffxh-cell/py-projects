@@ -92,7 +92,7 @@ class TerminalWidget(QWidget):
             f"color: {styles.GREEN_BRIGHT}; font-weight: bold;"
         )
         self.input = QLineEdit()
-        self.input.setPlaceholderText("type 'help' and press Enter")
+        self.input.setPlaceholderText("digite 'help' e pressione Enter")
         self.input.returnPressed.connect(self._on_return)
         self.input.installEventFilter(self)
 
@@ -151,8 +151,8 @@ class TerminalWidget(QWidget):
                       C O N T R O L
 """
         self._append(banner, styles.GREEN_DIM)
-        self._append("Integrated terminal ready. Type 'help' for commands.\n",
-                     styles.GREEN)
+        self._append("Terminal integrado pronto. Digite 'help' para ver os "
+                     "comandos.\n", styles.GREEN)
 
     # -- command flow --------------------------------------------------------
 

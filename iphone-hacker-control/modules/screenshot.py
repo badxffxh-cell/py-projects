@@ -49,7 +49,7 @@ async def _acapture(serial: Optional[str]) -> Result:
                 pass
         if not png:
             return Result.failure(
-                "Screenshot service returned no data.",
+                "O serviço de captura não retornou dados.",
                 error_type="EmptyScreenshot",
             )
         return Result.success(png, size=len(png))
@@ -58,9 +58,10 @@ async def _acapture(serial: Optional[str]) -> Result:
         res = core.describe_exception(exc)
         if res.hint is None:
             res.hint = (
-                "On iOS 17+ the screenshot service may require Developer Mode "
-                "and a RemoteServiceDiscovery tunnel (run as administrator). "
-                "Protected screens (passcode, some apps) cannot be captured."
+                "No iOS 17+ o serviço de captura pode exigir o Modo de "
+                "Desenvolvedor e um túnel RemoteServiceDiscovery (executar como "
+                "administrador). Telas protegidas (senha, alguns apps) não podem "
+                "ser capturadas."
             )
         return res
     finally:

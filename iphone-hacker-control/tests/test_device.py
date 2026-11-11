@@ -72,8 +72,8 @@ def test_screenshot_without_device():
 
 def test_diagnostics_host_report_always_available():
     rep = diagnostics.host_report()
-    assert "python" in rep
-    assert "os" in rep
+    assert "Python" in rep
+    assert "SO" in rep
 
 
 def test_full_report_has_host_and_mode():
@@ -88,7 +88,7 @@ def test_describe_exception_adds_hint_for_known_errors():
         pass
 
     res = core.describe_exception(NotPairedError("device is not paired"))
-    assert res.hint and "trust" in res.hint.lower()
+    assert res.hint and "confiar" in res.hint.lower()
 
 
 def test_run_sync_executes_coroutine():

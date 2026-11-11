@@ -209,7 +209,8 @@ class DeviceManager:
             usage = await _safe_get(client, domain="com.apple.disk_usage") or {}
             if not usage:
                 return Result.failure(
-                    "Storage information not exposed by this device/iOS version.",
+                    "Informações de armazenamento não expostas por este "
+                    "dispositivo/versão do iOS.",
                     error_type="NoData",
                 )
             total = usage.get("TotalDiskCapacity")
@@ -262,8 +263,8 @@ class DeviceManager:
                 "EthernetAddress": eth_mac,
                 "WiFiInfo": wifi_info,
                 "IPAddressNote": (
-                    "IP address is not exposed over the USB/lockdown channel; "
-                    "use the Wi-Fi panel for network-link discovery."
+                    "O endereço IP não é exposto pelo canal USB/lockdown; "
+                    "use o painel Wi-Fi para descoberta na rede."
                 ),
             }
             return Result.success(data)
@@ -279,7 +280,7 @@ class DeviceManager:
                 await svc.connect()
             await svc.restart()
             return Result.success(
-                "Reboot command sent. The device is restarting."
+                "Comando de reinício enviado. O dispositivo está reiniciando."
             )
 
         res = self._run(_op)

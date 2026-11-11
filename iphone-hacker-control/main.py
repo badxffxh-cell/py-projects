@@ -35,13 +35,13 @@ def selftest() -> int:
     from modules.terminal import TerminalEngine
 
     available, version, err = core.pymobiledevice3_status()
-    print(f"pymobiledevice3: {'OK ' + str(version) if available else 'MISSING ' + str(err)}")
+    print(f"pymobiledevice3: {'OK ' + str(version) if available else 'AUSENTE ' + str(err)}")
     engine = TerminalEngine()
     for cmd in ("help", "device", "usb status", "system diagnostics"):
         resp = engine.execute(cmd)
         first = (resp.text.splitlines() or [""])[0]
         print(f"[{cmd}] ok={resp.ok} -> {first[:80]}")
-    print("Self-test complete.")
+    print("Autoteste concluído.")
     return 0
 
 
@@ -52,10 +52,10 @@ def _run_gui(show_splash: bool = True) -> int:
     try:
         from PySide6.QtCore import Qt, QTimer
         from PySide6.QtWidgets import QApplication, QProgressBar, QVBoxLayout, QWidget, QLabel, QPlainTextEdit
-    except Exception as exc:  # PySide6 missing
-        print("[FATAL] PySide6 is required for the GUI but could not be imported.")
+    except Exception as exc:  # PySide6 ausente
+        print("[FATAL] O PySide6 é necessário para a interface, mas não pôde ser importado.")
         print(f"        {type(exc).__name__}: {exc}")
-        print("        Install it with: pip install -r requirements.txt")
+        print("        Instale com: pip install -r requirements.txt")
         return 2
 
     from interface import styles
@@ -121,25 +121,25 @@ def _run_gui(show_splash: bool = True) -> int:
             def check_deps():
                 available, version, err = core.pymobiledevice3_status()
                 if available:
-                    return f"[ OK ] pymobiledevice3 {version} detected"
-                return f"[WARN] pymobiledevice3 missing ({err}) — diagnostic mode"
+                    return f"[ OK ] pymobiledevice3 {version} detectado"
+                return f"[AVISO] pymobiledevice3 ausente ({err}) — modo diagnóstico"
 
             def detect_device():
                 try:
                     devs = core.list_devices()
                     if devs:
-                        return f"[ OK ] {len(devs)} Apple device(s) detected"
-                    return "[INFO] no device connected — diagnostic mode"
+                        return f"[ OK ] {len(devs)} dispositivo(s) Apple detectado(s)"
+                    return "[INFO] nenhum dispositivo conectado — modo diagnóstico"
                 except Exception as exc:
-                    return f"[INFO] usbmux: {type(exc).__name__} — diagnostic mode"
+                    return f"[INFO] usbmux: {type(exc).__name__} — modo diagnóstico"
 
             return [
-                ("> initializing secure diagnostic console...", None),
-                ("> loading interface modules...", None),
-                ("> verifying dependencies...", check_deps),
-                ("> probing usb / usbmux subsystem...", detect_device),
-                ("> calibrating terminal...", None),
-                ("> ready.", None),
+                ("> inicializando console de diagnóstico seguro...", None),
+                ("> carregando módulos da interface...", None),
+                ("> verificando dependências...", check_deps),
+                ("> sondando subsistema usb / usbmux...", detect_device),
+                ("> calibrando terminal...", None),
+                ("> pronto.", None),
             ]
 
         def _step(self) -> None:
@@ -155,7 +155,7 @@ def _run_gui(show_splash: bool = True) -> int:
                 try:
                     self.boot_log.appendPlainText("  " + action())
                 except Exception as exc:
-                    self.boot_log.appendPlainText(f"  [WARN] {exc}")
+                    self.boot_log.appendPlainText(f"  [AVISO] {exc}")
             self._i += 1
             self.progress.setValue(int(self._i / len(self._steps) * 100))
 

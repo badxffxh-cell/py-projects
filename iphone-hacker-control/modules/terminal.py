@@ -1,15 +1,20 @@
 """
-terminal.py — Command engine for the integrated terminal.
+terminal.py — Motor de comandos do terminal integrado.
 
-`TerminalEngine.execute(line)` parses a command, performs the REAL action via
-the device/usb/wifi/diagnostics modules, and returns an `EngineResponse` with
-formatted text plus an optional UI control action (clear/exit/mirror).
+`TerminalEngine.execute(line)` interpreta um comando, executa a ação REAL
+através dos módulos device/usb/wifi/diagnostics e retorna um `EngineResponse`
+com o texto formatado e uma ação opcional de UI (clear/exit/mirror).
 
-This class is deliberately GUI-free so it can be unit-tested headless. The GUI
-terminal widget runs it on a worker thread and renders the text.
+Esta classe é propositalmente livre de GUI, para poder ser testada sem tela. O
+widget de terminal da interface a executa em uma thread de trabalho e exibe o
+texto.
 
-Input is validated: unknown commands yield a helpful message, never a crash,
-and never a fabricated result.
+A entrada é validada: comandos desconhecidos geram uma mensagem útil, nunca uma
+falha, e nunca um resultado inventado.
+
+Observação: as PALAVRAS de comando (help, device, usb status, ...) permanecem em
+inglês por serem a API definida do terminal; todo o texto exibido está em
+português.
 """
 
 from __future__ import annotations
@@ -39,46 +44,46 @@ class EngineResponse:
 
 
 def _kv(title: str, pairs: dict) -> str:
-    """Render a dict as aligned key/value lines, skipping None nicely."""
+    """Renderiza um dict como linhas chave/valor alinhadas."""
     width = max((len(str(k)) for k in pairs), default=0)
     lines = [title] if title else []
     for k, v in pairs.items():
-        shown = "n/a" if v is None else v
+        shown = "n/d" if v is None else v
         lines.append(f"  {str(k).ljust(width)} : {shown}")
     return "\n".join(lines)
 
 
 def _fmt_result_error(res: Result) -> str:
-    out = [f"[ERROR] {res.error_type or 'Error'}: {res.error}"]
+    out = [f"[ERRO] {res.error_type or 'Erro'}: {res.error}"]
     if res.hint:
-        out.append(f"[HINT ] {res.hint}")
+        out.append(f"[DICA] {res.hint}")
     return "\n".join(out)
 
 
 HELP_TEXT = """\
-IPHONE HACKER CONTROL — command reference
------------------------------------------
-  help                 Show this help
-  clear                Clear the terminal screen
-  device               List detected Apple devices
-  device info          Model, iOS version, identifiers
-  device battery       Battery level and charging state
-  device storage       Disk capacity and free space
-  device network       Wi-Fi/Bluetooth MAC and link info
-  device screenshot    Capture a PNG from the device (if permitted)
-  device reboot        Restart the device (owner-authorized)
-  usb status           USB connection and usbmux service state
-  wifi status          Network-visible devices (needs Wi-Fi sync)
-  system diagnostics   Full host + device diagnostic report
-  logs                 Show the log file location and last lines
-  mirror start         Open the live screen-mirror panel
-  mirror stop          Close the screen-mirror panel
-  exit                 Quit the application
+IPHONE HACKER CONTROL — referência de comandos
+----------------------------------------------
+  help                 Mostrar esta ajuda
+  clear                Limpar a tela do terminal
+  device               Listar dispositivos Apple detectados
+  device info          Modelo, versão do iOS, identificadores
+  device battery       Nível da bateria e estado de carga
+  device storage       Capacidade de armazenamento e espaço livre
+  device network       MAC Wi-Fi/Bluetooth e informações de rede
+  device screenshot    Capturar um PNG do dispositivo (se permitido)
+  device reboot        Reiniciar o dispositivo (autorizado pelo proprietário)
+  usb status           Estado da conexão USB e do serviço usbmux
+  wifi status          Dispositivos visíveis na rede (requer sync Wi-Fi)
+  system diagnostics   Relatório completo de diagnóstico (host + dispositivo)
+  logs                 Mostrar o caminho do log e as últimas linhas
+  mirror start         Abrir o painel de espelhamento de tela
+  mirror stop          Fechar o painel de espelhamento de tela
+  exit                 Sair do aplicativo
 
-Notes:
-  * Commands act on your own, authorized device only.
-  * No lock/Face ID bypass, data extraction, or exploitation is performed.
-  * Features needing a device report clearly when none is connected.\
+Observações:
+  * Os comandos atuam somente no seu dispositivo, com autorização.
+  * Nenhum bypass de bloqueio/Face ID, extração de dados ou exploração é feito.
+  * Recursos que exigem um dispositivo avisam quando nenhum está conectado.\
 """
 
 
@@ -86,7 +91,7 @@ class TerminalEngine:
     def __init__(self, device: Optional[DeviceManager] = None) -> None:
         self.device = device or DeviceManager()
 
-    # -- dispatch ------------------------------------------------------------
+    # -- despacho ------------------------------------------------------------
 
     def execute(self, line: str) -> EngineResponse:
         raw = (line or "").strip()
@@ -96,7 +101,7 @@ class TerminalEngine:
         try:
             parts = shlex.split(raw)
         except ValueError as exc:
-            return EngineResponse(f"[ERROR] parse error: {exc}", ok=False)
+            return EngineResponse(f"[ERRO] erro de análise: {exc}", ok=False)
 
         cmd = parts[0].lower()
         args = parts[1:]
@@ -104,8 +109,10 @@ class TerminalEngine:
         handler = {
             "help": self._help,
             "?": self._help,
+            "ajuda": self._help,
             "clear": self._clear,
             "cls": self._clear,
+            "limpar": self._clear,
             "device": self._device,
             "usb": self._usb,
             "wifi": self._wifi,
@@ -114,19 +121,20 @@ class TerminalEngine:
             "mirror": self._mirror,
             "exit": self._exit,
             "quit": self._exit,
+            "sair": self._exit,
         }.get(cmd)
 
         if handler is None:
             return EngineResponse(
-                f"[ERROR] unknown command: {cmd!r}. Type 'help' for the list.",
+                f"[ERRO] comando desconhecido: {cmd!r}. Digite 'help' para ver a lista.",
                 ok=False,
             )
         try:
             return handler(args)
-        except Exception as exc:  # never hide errors; never crash the terminal
-            log.exception("command %r failed", raw)
+        except Exception as exc:  # nunca esconder erros; nunca derrubar o terminal
+            log.exception("comando %r falhou", raw)
             return EngineResponse(
-                f"[ERROR] {type(exc).__name__}: {exc}", ok=False
+                f"[ERRO] {type(exc).__name__}: {exc}", ok=False
             )
 
     # -- handlers ------------------------------------------------------------
@@ -138,21 +146,21 @@ class TerminalEngine:
         return EngineResponse("", action="clear")
 
     def _exit(self, args) -> EngineResponse:
-        return EngineResponse("Shutting down IPHONE HACKER CONTROL...", action="exit")
+        return EngineResponse("Encerrando o IPHONE HACKER CONTROL...", action="exit")
 
     def _logs(self, args) -> EngineResponse:
         log_file = logs_dir() / "iphone-hacker-control.log"
-        text = [f"Log file: {log_file}"]
+        text = [f"Arquivo de log: {log_file}"]
         try:
             if log_file.exists():
                 lines = log_file.read_text(encoding="utf-8", errors="replace").splitlines()
                 tail = lines[-15:]
-                text.append("--- last %d lines ---" % len(tail))
+                text.append("--- últimas %d linhas ---" % len(tail))
                 text.extend(tail)
             else:
-                text.append("(no log file yet)")
+                text.append("(ainda não há arquivo de log)")
         except Exception as exc:
-            text.append(f"[ERROR] could not read log: {exc}")
+            text.append(f"[ERRO] não foi possível ler o log: {exc}")
         return EngineResponse("\n".join(text))
 
     def _device(self, args) -> EngineResponse:
@@ -165,14 +173,14 @@ class TerminalEngine:
             devices = res.data or []
             if not devices:
                 return EngineResponse(
-                    "No devices detected. Connect an iPhone over USB, unlock it, "
-                    "and tap 'Trust This Computer'."
+                    "Nenhum dispositivo detectado. Conecte um iPhone via USB, "
+                    "desbloqueie-o e toque em 'Confiar neste computador'."
                 )
-            lines = [f"Detected {len(devices)} device(s):"]
+            lines = [f"{len(devices)} dispositivo(s) detectado(s):"]
             for d in devices:
                 lines.append(
                     f"  - serial={d.get('serial')} "
-                    f"conn={d.get('connection_type')}"
+                    f"conexão={d.get('connection_type')}"
                 )
             return EngineResponse("\n".join(lines))
 
@@ -182,15 +190,15 @@ class TerminalEngine:
                 return EngineResponse(_fmt_result_error(res), ok=False)
             d = res.data
             name = d.get("MarketingName") or d.get("ProductType") or "iPhone"
-            return EngineResponse(_kv(f"Device info ({name}):", {
-                "Name": d.get("DeviceName"),
-                "Marketing": d.get("MarketingName") or "(not mapped)",
-                "ProductType": d.get("ProductType"),
-                "iOS version": d.get("ProductVersion"),
+            return EngineResponse(_kv(f"Informações do dispositivo ({name}):", {
+                "Nome": d.get("DeviceName"),
+                "Marketing": d.get("MarketingName") or "(não mapeado)",
+                "Identificador": d.get("ProductType"),
+                "Versão do iOS": d.get("ProductVersion"),
                 "Build": d.get("BuildVersion"),
-                "Model number": d.get("ModelNumber"),
+                "Nº do modelo": d.get("ModelNumber"),
                 "Hardware": d.get("HardwareModel"),
-                "CPU arch": d.get("CPUArchitecture"),
+                "Arq. CPU": d.get("CPUArchitecture"),
                 "UDID": d.get("UniqueDeviceID"),
             }))
 
@@ -200,14 +208,12 @@ class TerminalEngine:
                 return EngineResponse(_fmt_result_error(res), ok=False)
             d = res.data
             pct = d.get("CurrentCapacity")
-            charging = d.get("IsCharging")
-            ext = d.get("ExternalConnected")
-            return EngineResponse(_kv("Battery:", {
-                "Level": f"{pct}%" if pct is not None else "n/a",
-                "Charging": charging,
-                "External power": ext,
-                "Fully charged": d.get("FullyCharged"),
-                "Cycle count": d.get("CycleCount"),
+            return EngineResponse(_kv("Bateria:", {
+                "Nível": f"{pct}%" if pct is not None else "n/d",
+                "Carregando": d.get("IsCharging"),
+                "Energia externa": d.get("ExternalConnected"),
+                "Totalmente carregada": d.get("FullyCharged"),
+                "Ciclos": d.get("CycleCount"),
             }))
 
         if sub == "storage":
@@ -215,11 +221,11 @@ class TerminalEngine:
             if not res.ok:
                 return EngineResponse(_fmt_result_error(res), ok=False)
             h = res.data.get("human", {})
-            return EngineResponse(_kv("Storage:", {
+            return EngineResponse(_kv("Armazenamento:", {
                 "Total": h.get("total"),
-                "Data partition": h.get("data_total"),
-                "Available": h.get("available"),
-                "Used (approx)": h.get("used"),
+                "Partição de dados": h.get("data_total"),
+                "Disponível": h.get("available"),
+                "Usado (aprox.)": h.get("used"),
             }))
 
         if sub == "network":
@@ -227,11 +233,11 @@ class TerminalEngine:
             if not res.ok:
                 return EngineResponse(_fmt_result_error(res), ok=False)
             d = res.data
-            return EngineResponse(_kv("Network:", {
-                "Wi-Fi MAC": d.get("WiFiAddress"),
-                "Bluetooth MAC": d.get("BluetoothAddress"),
-                "Ethernet MAC": d.get("EthernetAddress"),
-                "Note": d.get("IPAddressNote"),
+            return EngineResponse(_kv("Rede:", {
+                "MAC Wi-Fi": d.get("WiFiAddress"),
+                "MAC Bluetooth": d.get("BluetoothAddress"),
+                "MAC Ethernet": d.get("EthernetAddress"),
+                "Observação": d.get("IPAddressNote"),
             }))
 
         if sub == "screenshot":
@@ -239,14 +245,14 @@ class TerminalEngine:
             if not res.ok:
                 return EngineResponse(_fmt_result_error(res), ok=False)
             return EngineResponse(
-                f"Screenshot saved: {res.data} ({res.meta.get('size')} bytes)"
+                f"Captura salva: {res.data} ({res.meta.get('size')} bytes)"
             )
 
         if sub == "reboot":
-            # Require explicit confirmation token to avoid accidental reboots.
-            if not (len(args) > 1 and args[1].lower() in ("--yes", "-y", "confirm")):
+            # Exige confirmação explícita para evitar reinícios acidentais.
+            if not (len(args) > 1 and args[1].lower() in ("--yes", "-y", "confirm", "--sim")):
                 return EngineResponse(
-                    "This will RESTART the device. Re-run as:\n"
+                    "Isso vai REINICIAR o dispositivo. Execute novamente como:\n"
                     "  device reboot --yes",
                     ok=True,
                 )
@@ -256,86 +262,86 @@ class TerminalEngine:
             return EngineResponse(str(res.data))
 
         return EngineResponse(
-            f"[ERROR] unknown 'device' subcommand: {sub!r}. "
-            "Try: info | battery | storage | network | screenshot | reboot",
+            f"[ERRO] subcomando 'device' desconhecido: {sub!r}. "
+            "Tente: info | battery | storage | network | screenshot | reboot",
             ok=False,
         )
 
     def _usb(self, args) -> EngineResponse:
         sub = args[0].lower() if args else "status"
         if sub != "status":
-            return EngineResponse("[ERROR] try: usb status", ok=False)
+            return EngineResponse("[ERRO] tente: usb status", ok=False)
         res = usb_mod.status()
         if not res.ok:
             return EngineResponse(_fmt_result_error(res), ok=False)
         d = res.data
-        lines = [f"USB status: {d.get('usb_count')} device(s), "
-                 f"usbmux reachable={d.get('usbmux_reachable')}"]
+        lines = [f"Status USB: {d.get('usb_count')} dispositivo(s), "
+                 f"usbmux acessível={d.get('usbmux_reachable')}"]
         for dev in d.get("devices", []):
-            lines.append(f"  - serial={dev.get('serial')} conn={dev.get('connection')}")
+            lines.append(f"  - serial={dev.get('serial')} conexão={dev.get('connection')}")
         return EngineResponse("\n".join(lines))
 
     def _wifi(self, args) -> EngineResponse:
         sub = args[0].lower() if args else "status"
         if sub != "status":
-            return EngineResponse("[ERROR] try: wifi status", ok=False)
+            return EngineResponse("[ERRO] tente: wifi status", ok=False)
         res = wifi_mod.status()
         if not res.ok:
             return EngineResponse(_fmt_result_error(res), ok=False)
         d = res.data
-        lines = [f"Wi-Fi status: {d.get('network_count')} network-visible device(s)"]
+        lines = [f"Status Wi-Fi: {d.get('network_count')} dispositivo(s) visível(is) na rede"]
         for dev in d.get("devices", []):
-            lines.append(f"  - serial={dev.get('serial')} conn={dev.get('connection')}")
-        lines.append(f"  note: {d.get('note')}")
+            lines.append(f"  - serial={dev.get('serial')} conexão={dev.get('connection')}")
+        lines.append(f"  obs.: {d.get('note')}")
         return EngineResponse("\n".join(lines))
 
     def _system(self, args) -> EngineResponse:
         sub = args[0].lower() if args else ""
         if sub != "diagnostics":
-            return EngineResponse("[ERROR] try: system diagnostics", ok=False)
+            return EngineResponse("[ERRO] tente: system diagnostics", ok=False)
         res = diag_mod.full_report(self.device)
         if not res.ok:
             return EngineResponse(_fmt_result_error(res), ok=False)
         r = res.data
-        out = [f"System diagnostics — mode: {r.get('mode')}", ""]
+        out = [f"Diagnóstico do sistema — modo: {r.get('mode')}", ""]
         out.append(_kv("Host:", r.get("host", {})))
         det = r.get("detection", {})
         out.append("")
-        out.append(_kv("Detection:", {
+        out.append(_kv("Detecção:", {
             "ok": det.get("ok"),
-            "devices": det.get("count"),
-            "error": det.get("error"),
+            "dispositivos": det.get("count"),
+            "erro": det.get("error"),
         }))
         if r.get("device"):
             d = r["device"]
             out.append("")
-            out.append(_kv("Device:", {
-                "Name": d.get("DeviceName"),
-                "ProductType": d.get("ProductType"),
+            out.append(_kv("Dispositivo:", {
+                "Nome": d.get("DeviceName"),
+                "Identificador": d.get("ProductType"),
                 "iOS": d.get("ProductVersion"),
                 "Build": d.get("BuildVersion"),
             }))
         if r.get("battery") and "error" not in r["battery"]:
             out.append("")
-            out.append(_kv("Battery:", {
-                "Level": f"{r['battery'].get('CurrentCapacity')}%",
-                "Charging": r["battery"].get("IsCharging"),
+            out.append(_kv("Bateria:", {
+                "Nível": f"{r['battery'].get('CurrentCapacity')}%",
+                "Carregando": r["battery"].get("IsCharging"),
             }))
         if r.get("storage") and "error" not in r["storage"]:
             h = r["storage"].get("human", {})
             out.append("")
-            out.append(_kv("Storage:", {"Total": h.get("total"),
-                                        "Available": h.get("available")}))
+            out.append(_kv("Armazenamento:", {"Total": h.get("total"),
+                                              "Disponível": h.get("available")}))
         return EngineResponse("\n".join(out))
 
     def _mirror(self, args) -> EngineResponse:
         sub = args[0].lower() if args else ""
         if sub == "start":
             return EngineResponse(
-                "Opening screen-mirror panel...", action="mirror_start"
+                "Abrindo painel de espelhamento...", action="mirror_start"
             )
         if sub == "stop":
             return EngineResponse(
-                "Closing screen-mirror panel...", action="mirror_stop"
+                "Fechando painel de espelhamento...", action="mirror_stop"
             )
-        return EngineResponse("[ERROR] try: mirror start | mirror stop", ok=False)
+        return EngineResponse("[ERRO] tente: mirror start | mirror stop", ok=False)

@@ -63,9 +63,9 @@ def require_pmd3() -> None:
     available, _version, err = pymobiledevice3_status()
     if not available:
         raise BackendUnavailable(
-            "pymobiledevice3 is not installed or failed to import. "
-            "Run install.bat (or: pip install -r requirements.txt). "
-            f"Import error: {err}"
+            "pymobiledevice3 não está instalado ou falhou ao importar. "
+            "Execute install.bat (ou: pip install -r requirements.txt). "
+            f"Erro de importação: {err}"
         )
 
 
@@ -171,9 +171,10 @@ async def alist_devices() -> list[DeviceRef]:
         raw = await usbmux.list_devices()
     except Exception as exc:
         raise BackendError(
-            "Could not query usbmuxd. On Windows this usually means the Apple "
-            "Mobile Device Service (installed with iTunes / the Apple Devices "
-            f"app) is not running. Underlying error: {type(exc).__name__}: {exc}"
+            "Não foi possível consultar o usbmuxd. No Windows, isso geralmente "
+            "significa que o Apple Mobile Device Service (instalado com o iTunes "
+            "/ app Apple Devices) não está em execução. "
+            f"Erro original: {type(exc).__name__}: {exc}"
         ) from exc
 
     refs: list[DeviceRef] = []
@@ -204,8 +205,9 @@ async def aopen_lockdown(serial: Optional[str] = None, autopair: bool = True):
         devices = await alist_devices()
         if not devices:
             raise NoDeviceError(
-                "No iPhone/iPad detected. Connect the device over USB, unlock "
-                "it, and tap 'Trust This Computer' when prompted."
+                "Nenhum iPhone/iPad detectado. Conecte o dispositivo via USB, "
+                "desbloqueie-o e toque em 'Confiar neste computador' quando "
+                "solicitado."
             )
         usb_first = [d for d in devices if d.is_usb] or devices
         serial = usb_first[0].serial
@@ -231,22 +233,22 @@ def describe_exception(exc: BaseException) -> Result:
     lowered = (name + " " + msg).lower()
     if "notpaired" in lowered or "pairing" in lowered or "trust" in lowered:
         hint = (
-            "Unlock the iPhone and tap 'Trust This Computer', then retry. "
-            "You may also need to pair over USB first."
+            "Desbloqueie o iPhone e toque em 'Confiar neste computador', depois "
+            "tente de novo. Pode ser necessário parear por USB primeiro."
         )
     elif "passwordrequired" in lowered or "password" in lowered:
-        hint = "The device is locked. Unlock it with the passcode and retry."
+        hint = "O dispositivo está bloqueado. Desbloqueie com a senha e tente de novo."
     elif "developermode" in lowered or "developer mode" in lowered:
         hint = (
-            "This service needs Developer Mode. On iOS 16+ enable it under "
-            "Settings > Privacy & Security > Developer Mode."
+            "Este serviço exige o Modo de Desenvolvedor. No iOS 16+ ative em "
+            "Ajustes > Privacidade e Segurança > Modo de Desenvolvedor."
         )
     elif "connectionfailed" in lowered or "usbmux" in lowered:
         hint = (
-            "usbmuxd/Apple Mobile Device Service unreachable. Ensure iTunes or "
-            "the Apple Devices app is installed and its service is running."
+            "usbmuxd/Apple Mobile Device Service inacessível. Verifique se o "
+            "iTunes ou o app Apple Devices está instalado e com o serviço ativo."
         )
     elif "no device" in lowered or "nodevice" in lowered:
-        hint = "Connect and unlock the device, then retry."
+        hint = "Conecte e desbloqueie o dispositivo, depois tente de novo."
 
     return Result.failure(error=msg, error_type=name, hint=hint)
