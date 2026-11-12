@@ -1,0 +1,167 @@
+===============================================================================
+            IPHONE HACKER CONTROL - COMO EXECUTAR (PASSO A PASSO)
+===============================================================================
+
+Este guia ensina, do zero, a instalar e executar o programa no WINDOWS.
+Leia na ordem. Qualquer erro aparece com uma DICA na tela e nos logs.
+
+-------------------------------------------------------------------------------
+ 0) O QUE VOCE PRECISA ANTES DE COMECAR
+-------------------------------------------------------------------------------
+  [ ] Windows 10 ou 11.
+  [ ] Python 3.10 ou mais novo (recomendado 3.12+).
+  [ ] O app "Apple Devices" (Microsoft Store) OU o iTunes instalado.
+      -> E ele que instala o "Apple Mobile Device Service", necessario para o
+         Windows enxergar o iPhone pelo cabo USB.
+  [ ] Um cabo USB DE DADOS (alguns cabos sao so de carga e nao servem).
+
+  Sem iPhone conectado o programa ABRE do mesmo jeito, em "modo diagnostico".
+  Ele nunca inventa um aparelho.
+
+-------------------------------------------------------------------------------
+ 1) INSTALAR O PYTHON (se ainda nao tiver)
+-------------------------------------------------------------------------------
+  1. Acesse: https://www.python.org/downloads/
+  2. Baixe o Python 3.12 (ou mais novo) para Windows.
+  3. IMPORTANTE: na primeira tela do instalador, MARQUE a caixa
+     "Add python.exe to PATH" e so entao clique em "Install Now".
+  4. Para conferir: abra o Prompt de Comando e digite:
+         python --version
+     Deve aparecer algo como "Python 3.12.x".
+
+-------------------------------------------------------------------------------
+ 2) BAIXAR O PROJETO
+-------------------------------------------------------------------------------
+  - Coloque a pasta "iphone-hacker-control" em um lugar facil, por exemplo:
+         C:\Users\SeuNome\Desktop\iphone-hacker-control
+  - Dentro dela devem estar: main.py, install.bat, start.bat, requirements.txt,
+    as pastas modules\ e interface\, etc.
+
+-------------------------------------------------------------------------------
+ 3) INSTALAR (so precisa fazer UMA vez)
+-------------------------------------------------------------------------------
+  - Abra a pasta do projeto no Explorador de Arquivos.
+  - De DOIS CLIQUES em:  install.bat
+
+  O que ele faz sozinho:
+    * encontra o seu Python;
+    * cria um ambiente isolado na pasta .venv;
+    * instala as dependencias (PySide6 e pymobiledevice3);
+    * confere se tudo importou certo.
+
+  Ao terminar deve aparecer: "Instalacao concluida."
+  Se aparecer algum [ERRO], leia a mensagem: ela diz o que fazer.
+
+  (ALTERNATIVA manual, pelo Prompt de Comando, dentro da pasta do projeto:)
+        python -m venv .venv
+        .venv\Scripts\activate
+        pip install -r requirements.txt
+
+-------------------------------------------------------------------------------
+ 4) EXECUTAR O PROGRAMA
+-------------------------------------------------------------------------------
+  - De DOIS CLIQUES em:  start.bat
+
+  Vai aparecer:
+    1. a animacao de inicializacao (estilo Matrix);
+    2. a verificacao de dependencias;
+    3. a deteccao do iPhone;
+    4. o painel de informacoes (esquerda) e o terminal (direita).
+
+  (ALTERNATIVA manual:)
+        .venv\Scripts\python main.py
+
+  Opcoes extras:
+        python main.py --no-splash    (pula a animacao de abertura)
+        python main.py --selftest     (so testa o backend e fecha, sem janela)
+
+-------------------------------------------------------------------------------
+ 5) CONECTAR O IPHONE POR USB
+-------------------------------------------------------------------------------
+  1. Garanta que o app "Apple Devices" ou o iTunes esteja instalado.
+  2. Conecte o iPhone com o cabo USB de dados.
+  3. DESBLOQUEIE o iPhone. Quando aparecer "Confiar neste computador?",
+     toque em CONFIAR e digite a senha do aparelho.
+  4. No programa, clique em DETECTAR (ou digite:  device  no terminal).
+  5. Veja os dados com:  device info ,  device battery ,  device storage .
+
+-------------------------------------------------------------------------------
+ 6) USAR O TERMINAL (comandos)
+-------------------------------------------------------------------------------
+  Digite um comando e pressione Enter. Os comandos sao em ingles; as respostas
+  aparecem em portugues. Principais:
+
+     help                 mostra a lista de comandos
+     clear                limpa a tela
+     device               lista os dispositivos detectados
+     device info          modelo, versao do iOS, identificadores
+     device battery       nivel da bateria e carga
+     device storage       armazenamento total e livre
+     device network       MAC Wi-Fi/Bluetooth
+     device screenshot    salva um print do iPhone (se permitido)
+     device reboot --yes  reinicia o iPhone (pede confirmacao)
+     usb status           estado do USB e do servico usbmux
+     wifi status          dispositivos visiveis na rede (requer sync Wi-Fi)
+     system diagnostics   relatorio completo (PC + iPhone)
+     logs                 caminho do log e ultimas linhas
+     mirror start         abre o espelhamento de tela
+     mirror stop          fecha o espelhamento
+     exit                 sai do programa
+
+-------------------------------------------------------------------------------
+ 7) CONFIGURAR O WI-FI (sem fio) - OPCIONAL
+-------------------------------------------------------------------------------
+  O acesso sem fio reaproveita o pareamento do cabo. Entao:
+    1. Conecte 1x por USB e toque em CONFIAR (passo 5).
+    2. Ative o "sync por Wi-Fi" (no Finder/iTunes: "Mostrar este iPhone quando
+       no Wi-Fi").
+    3. Deixe o PC e o iPhone na MESMA rede Wi-Fi.
+    4. Pode tirar o cabo. Use:  wifi status  para ver o aparelho na rede.
+
+-------------------------------------------------------------------------------
+ 8) ESPELHAMENTO E CONTROLE (limites honestos)
+-------------------------------------------------------------------------------
+  - "mirror start" mostra a tela do iPhone AO VIVO, SOMENTE LEITURA
+    (atualizacao por captura, alguns quadros por segundo).
+  - CONTROLE POR MOUSE (toque/arrastar/digitar) NAO esta disponivel: o iOS nao
+    permite isso por este canal. Clicar na tela espelhada apenas mostra um aviso
+    explicando. Isso e uma limitacao do iOS, nao um defeito.
+  - Telas protegidas (bloqueio, senha, alguns apps, video com DRM) podem
+    aparecer em branco - e informado, nunca escondido.
+
+-------------------------------------------------------------------------------
+ 9) GERAR UM .EXE (opcional, para abrir sem Python)
+-------------------------------------------------------------------------------
+  - De DOIS CLIQUES em:  build_exe.bat
+  - Ao final, o executavel fica em:
+        dist\IphoneHackerControl\IphoneHackerControl.exe
+  - Distribua a pasta "IphoneHackerControl" inteira (nao so o .exe).
+
+-------------------------------------------------------------------------------
+ 10) SE DER ALGUM PROBLEMA
+-------------------------------------------------------------------------------
+  "Nao foi possivel consultar o usbmuxd"
+     -> Instale o app Apple Devices / iTunes e garanta que o
+        "Apple Mobile Device Service" esteja rodando.
+
+  iPhone nao aparece
+     -> Use um cabo de DADOS, desbloqueie o aparelho e toque em CONFIAR.
+
+  Captura falha no iOS 17 ou mais novo
+     -> Pode exigir o Modo de Desenvolvedor (Ajustes > Privacidade e Seguranca
+        > Modo de Desenvolvedor) e permissoes de administrador.
+
+  A janela nao abre
+     -> Rode install.bat de novo. Veja os detalhes em:
+        logs\iphone-hacker-control.log  (ou digite  logs  no terminal)
+
+-------------------------------------------------------------------------------
+ IMPORTANTE (seguranca)
+-------------------------------------------------------------------------------
+  Use somente no SEU proprio aparelho, com sua autorizacao. O programa NAO faz
+  bypass de bloqueio/Face ID, nao extrai senhas, nao invade dispositivos e nao
+  explora falhas. Tudo roda localmente; nada e enviado para fora.
+
+===============================================================================
+ Resumo rapido:  install.bat  ->  start.bat  ->  digite 'help'
+===============================================================================
