@@ -1,1 +1,505 @@
-{"duration": 37.536, "words": [{"text": "E", "start": 0.15, "end": 0.386}, {"text": "se", "start": 0.412, "end": 0.668}, {"text": "a", "start": 0.696, "end": 0.932}, {"text": "luz", "start": 0.958, "end": 1.233}, {"text": "e", "start": 1.264, "end": 1.5}, {"text": "a", "start": 1.526, "end": 1.762}, {"text": "internet", "start": 1.788, "end": 2.162}, {"text": "sumissem", "start": 2.204, "end": 2.578}, {"text": "agora?", "start": 2.62, "end": 2.955}, {"text": "Cinco", "start": 3.172, "end": 3.487}, {"text": "minutos.", "start": 3.522, "end": 3.896}, {"text": "Semáforos", "start": 4.118, "end": 4.512}, {"text": "apagam.", "start": 4.556, "end": 4.911}, {"text": "Cartão", "start": 5.13, "end": 5.465}, {"text": "e", "start": 5.502, "end": 5.738}, {"text": "caixa", "start": 5.764, "end": 6.079}, {"text": "eletrônico", "start": 6.114, "end": 6.528}, {"text": "costumam", "start": 6.574, "end": 6.948}, {"text": "parar.", "start": 6.99, "end": 7.325}, {"text": "Hospitais", "start": 7.542, "end": 7.936}, {"text": "ligam", "start": 7.98, "end": 8.295}, {"text": "geradores", "start": 8.33, "end": 8.724}, {"text": "em", "start": 8.768, "end": 9.024}, {"text": "segundos.", "start": 9.052, "end": 9.446}, {"text": "Uma", "start": 9.67, "end": 9.945}, {"text": "hora.", "start": 9.976, "end": 10.291}, {"text": "A", "start": 10.506, "end": 10.742}, {"text": "rede", "start": 10.768, "end": 11.063}, {"text": "pode", "start": 11.096, "end": 11.391}, {"text": "travar.", "start": 11.424, "end": 11.779}, {"text": "No", "start": 11.998, "end": 12.254}, {"text": "apagão", "start": 12.282, "end": 12.617}, {"text": "da", "start": 12.654, "end": 12.91}, {"text": "Espanha,", "start": 12.938, "end": 13.312}, {"text": "a", "start": 13.354, "end": 13.59}, {"text": "internet", "start": 13.616, "end": 13.99}, {"text": "caiu", "start": 14.032, "end": 14.327}, {"text": "a", "start": 14.36, "end": 14.596}, {"text": "17%", "start": 14.622, "end": 14.897}, {"text": "do", "start": 14.928, "end": 15.184}, {"text": "normal.", "start": 15.212, "end": 15.567}, {"text": "Seis", "start": 15.786, "end": 16.081}, {"text": "horas.", "start": 16.114, "end": 16.449}, {"text": "As", "start": 16.666, "end": 16.922}, {"text": "baterias", "start": 16.95, "end": 17.324}, {"text": "das", "start": 17.366, "end": 17.641}, {"text": "torres", "start": 17.672, "end": 18.007}, {"text": "costumam", "start": 18.044, "end": 18.418}, {"text": "durar", "start": 18.46, "end": 18.775}, {"text": "de", "start": 18.81, "end": 19.066}, {"text": "2", "start": 19.094, "end": 19.33}, {"text": "a", "start": 19.356, "end": 19.592}, {"text": "8", "start": 19.618, "end": 19.854}, {"text": "horas.", "start": 19.88, "end": 20.215}, {"text": "Quando", "start": 20.432, "end": 20.767}, {"text": "acabam…", "start": 20.804, "end": 21.159}, {"text": "o", "start": 21.378, "end": 21.614}, {"text": "sinal", "start": 21.64, "end": 21.955}, {"text": "some.", "start": 21.99, "end": 22.305}, {"text": "Doze", "start": 22.52, "end": 22.815}, {"text": "horas.", "start": 22.848, "end": 23.183}, {"text": "A", "start": 23.4, "end": 23.636}, {"text": "comida", "start": 23.662, "end": 23.997}, {"text": "da", "start": 24.034, "end": 24.29}, {"text": "geladeira", "start": 24.318, "end": 24.712}, {"text": "já", "start": 24.756, "end": 25.012}, {"text": "passou", "start": 25.04, "end": 25.375}, {"text": "do", "start": 25.412, "end": 25.668}, {"text": "limite.", "start": 25.696, "end": 26.051}, {"text": "Sem", "start": 26.27, "end": 26.545}, {"text": "bombas,", "start": 26.576, "end": 26.931}, {"text": "a", "start": 26.97, "end": 27.206}, {"text": "água", "start": 27.232, "end": 27.527}, {"text": "pode", "start": 27.56, "end": 27.855}, {"text": "parar", "start": 27.888, "end": 28.203}, {"text": "de", "start": 28.238, "end": 28.494}, {"text": "chegar.", "start": 28.522, "end": 28.877}, {"text": "Vinte", "start": 29.096, "end": 29.411}, {"text": "e", "start": 29.446, "end": 29.682}, {"text": "quatro", "start": 29.708, "end": 30.043}, {"text": "horas?", "start": 30.08, "end": 30.415}, {"text": "No", "start": 30.632, "end": 30.888}, {"text": "Amapá,", "start": 30.916, "end": 31.251}, {"text": "a", "start": 31.288, "end": 31.524}, {"text": "luz", "start": 31.55, "end": 31.825}, {"text": "só", "start": 31.856, "end": 32.112}, {"text": "voltou", "start": 32.14, "end": 32.475}, {"text": "por", "start": 32.512, "end": 32.787}, {"text": "completo", "start": 32.818, "end": 33.192}, {"text": "depois", "start": 33.234, "end": 33.569}, {"text": "de", "start": 33.606, "end": 33.862}, {"text": "22", "start": 33.89, "end": 34.146}, {"text": "dias.", "start": 34.174, "end": 34.489}, {"text": "Você", "start": 34.704, "end": 34.999}, {"text": "aguentaria", "start": 35.032, "end": 35.446}, {"text": "24", "start": 35.492, "end": 35.748}, {"text": "horas?", "start": 35.776, "end": 36.111}, {"text": "Comenta", "start": 36.328, "end": 36.683}, {"text": "e", "start": 36.722, "end": 36.958}, {"text": "salva.", "start": 36.984, "end": 37.319}]}
+{
+ "duration": 43.4,
+ "words": [
+  {
+   "text": "E",
+   "start": 0.0,
+   "end": 0.24
+  },
+  {
+   "text": "se",
+   "start": 0.24,
+   "end": 0.42
+  },
+  {
+   "text": "a",
+   "start": 0.42,
+   "end": 0.52
+  },
+  {
+   "text": "luz",
+   "start": 0.52,
+   "end": 0.7
+  },
+  {
+   "text": "e",
+   "start": 0.7,
+   "end": 0.84
+  },
+  {
+   "text": "a",
+   "start": 0.84,
+   "end": 1.02
+  },
+  {
+   "text": "internet",
+   "start": 1.02,
+   "end": 1.32
+  },
+  {
+   "text": "sumissem",
+   "start": 1.32,
+   "end": 2.14
+  },
+  {
+   "text": "agora?",
+   "start": 2.14,
+   "end": 2.58
+  },
+  {
+   "text": "Cinco",
+   "start": 4.1,
+   "end": 4.44
+  },
+  {
+   "text": "minutos.",
+   "start": 4.44,
+   "end": 4.98
+  },
+  {
+   "text": "Semáforos",
+   "start": 5.36,
+   "end": 5.86
+  },
+  {
+   "text": "apagam.",
+   "start": 5.86,
+   "end": 6.4
+  },
+  {
+   "text": "Cartão",
+   "start": 6.66,
+   "end": 6.98
+  },
+  {
+   "text": "e",
+   "start": 6.98,
+   "end": 7.08
+  },
+  {
+   "text": "caixa",
+   "start": 7.08,
+   "end": 7.32
+  },
+  {
+   "text": "eletrônico",
+   "start": 7.32,
+   "end": 7.9
+  },
+  {
+   "text": "costumam",
+   "start": 7.9,
+   "end": 8.3
+  },
+  {
+   "text": "parar.",
+   "start": 8.3,
+   "end": 8.68
+  },
+  {
+   "text": "Hospitais",
+   "start": 9.12,
+   "end": 9.52
+  },
+  {
+   "text": "ligam",
+   "start": 9.52,
+   "end": 9.8
+  },
+  {
+   "text": "geradores",
+   "start": 9.8,
+   "end": 10.24
+  },
+  {
+   "text": "em",
+   "start": 10.24,
+   "end": 10.54
+  },
+  {
+   "text": "segundos.",
+   "start": 10.54,
+   "end": 11.12
+  },
+  {
+   "text": "Uma",
+   "start": 12.46,
+   "end": 12.68
+  },
+  {
+   "text": "hora.",
+   "start": 12.68,
+   "end": 12.98
+  },
+  {
+   "text": "A",
+   "start": 13.3,
+   "end": 13.44
+  },
+  {
+   "text": "rede",
+   "start": 13.44,
+   "end": 13.64
+  },
+  {
+   "text": "pode",
+   "start": 13.64,
+   "end": 13.92
+  },
+  {
+   "text": "travar.",
+   "start": 13.92,
+   "end": 14.4
+  },
+  {
+   "text": "No",
+   "start": 14.64,
+   "end": 14.76
+  },
+  {
+   "text": "apagão",
+   "start": 14.76,
+   "end": 15.02
+  },
+  {
+   "text": "da",
+   "start": 15.02,
+   "end": 15.3
+  },
+  {
+   "text": "Espanha,",
+   "start": 15.3,
+   "end": 15.66
+  },
+  {
+   "text": "a",
+   "start": 15.78,
+   "end": 15.94
+  },
+  {
+   "text": "internet",
+   "start": 15.94,
+   "end": 16.2
+  },
+  {
+   "text": "caiu",
+   "start": 16.2,
+   "end": 16.52
+  },
+  {
+   "text": "a",
+   "start": 16.52,
+   "end": 16.68
+  },
+  {
+   "text": "17%",
+   "start": 16.68,
+   "end": 17.6
+  },
+  {
+   "text": "do",
+   "start": 17.6,
+   "end": 17.78
+  },
+  {
+   "text": "normal.",
+   "start": 17.78,
+   "end": 18.18
+  },
+  {
+   "text": "Seis",
+   "start": 19.46,
+   "end": 19.82
+  },
+  {
+   "text": "horas.",
+   "start": 19.82,
+   "end": 20.2
+  },
+  {
+   "text": "As",
+   "start": 20.46,
+   "end": 20.64
+  },
+  {
+   "text": "baterias",
+   "start": 20.64,
+   "end": 21.02
+  },
+  {
+   "text": "das",
+   "start": 21.02,
+   "end": 21.28
+  },
+  {
+   "text": "torres",
+   "start": 21.28,
+   "end": 21.62
+  },
+  {
+   "text": "costumam",
+   "start": 21.62,
+   "end": 22.0
+  },
+  {
+   "text": "durar",
+   "start": 22.0,
+   "end": 22.36
+  },
+  {
+   "text": "de",
+   "start": 22.36,
+   "end": 22.58
+  },
+  {
+   "text": "2",
+   "start": 22.58,
+   "end": 22.9
+  },
+  {
+   "text": "a",
+   "start": 22.9,
+   "end": 23.06
+  },
+  {
+   "text": "8",
+   "start": 23.06,
+   "end": 23.36
+  },
+  {
+   "text": "horas.",
+   "start": 23.36,
+   "end": 23.8
+  },
+  {
+   "text": "Quando",
+   "start": 23.98,
+   "end": 24.18
+  },
+  {
+   "text": "acabam…",
+   "start": 24.18,
+   "end": 24.92
+  },
+  {
+   "text": "o",
+   "start": 24.92,
+   "end": 25.12
+  },
+  {
+   "text": "sinal",
+   "start": 25.12,
+   "end": 25.44
+  },
+  {
+   "text": "some.",
+   "start": 25.44,
+   "end": 25.76
+  },
+  {
+   "text": "Doze",
+   "start": 27.08,
+   "end": 27.38
+  },
+  {
+   "text": "horas.",
+   "start": 27.38,
+   "end": 27.78
+  },
+  {
+   "text": "A",
+   "start": 28.04,
+   "end": 28.18
+  },
+  {
+   "text": "comida",
+   "start": 28.18,
+   "end": 28.42
+  },
+  {
+   "text": "da",
+   "start": 28.42,
+   "end": 28.6
+  },
+  {
+   "text": "geladeira",
+   "start": 28.6,
+   "end": 29.14
+  },
+  {
+   "text": "já",
+   "start": 29.14,
+   "end": 29.46
+  },
+  {
+   "text": "passou",
+   "start": 29.46,
+   "end": 29.72
+  },
+  {
+   "text": "do",
+   "start": 29.72,
+   "end": 29.9
+  },
+  {
+   "text": "limite.",
+   "start": 29.9,
+   "end": 30.26
+  },
+  {
+   "text": "Sem",
+   "start": 30.58,
+   "end": 30.8
+  },
+  {
+   "text": "bombas,",
+   "start": 30.8,
+   "end": 31.36
+  },
+  {
+   "text": "a",
+   "start": 31.5,
+   "end": 31.66
+  },
+  {
+   "text": "água",
+   "start": 31.66,
+   "end": 31.78
+  },
+  {
+   "text": "pode",
+   "start": 31.78,
+   "end": 32.04
+  },
+  {
+   "text": "parar",
+   "start": 32.04,
+   "end": 32.36
+  },
+  {
+   "text": "de",
+   "start": 32.36,
+   "end": 32.62
+  },
+  {
+   "text": "chegar.",
+   "start": 32.62,
+   "end": 32.84
+  },
+  {
+   "text": "Vinte",
+   "start": 33.74,
+   "end": 34.38
+  },
+  {
+   "text": "e",
+   "start": 34.38,
+   "end": 34.48
+  },
+  {
+   "text": "quatro",
+   "start": 34.48,
+   "end": 34.64
+  },
+  {
+   "text": "horas?",
+   "start": 34.64,
+   "end": 34.98
+  },
+  {
+   "text": "No",
+   "start": 35.36,
+   "end": 35.44
+  },
+  {
+   "text": "Amapá,",
+   "start": 35.44,
+   "end": 36.1
+  },
+  {
+   "text": "a",
+   "start": 36.2,
+   "end": 36.28
+  },
+  {
+   "text": "luz",
+   "start": 36.28,
+   "end": 36.42
+  },
+  {
+   "text": "só",
+   "start": 36.42,
+   "end": 36.7
+  },
+  {
+   "text": "voltou",
+   "start": 36.7,
+   "end": 37.04
+  },
+  {
+   "text": "por",
+   "start": 37.04,
+   "end": 37.22
+  },
+  {
+   "text": "completo",
+   "start": 37.22,
+   "end": 37.62
+  },
+  {
+   "text": "depois",
+   "start": 37.62,
+   "end": 37.94
+  },
+  {
+   "text": "de",
+   "start": 37.94,
+   "end": 38.26
+  },
+  {
+   "text": "22",
+   "start": 38.26,
+   "end": 38.8
+  },
+  {
+   "text": "dias.",
+   "start": 38.8,
+   "end": 39.34
+  },
+  {
+   "text": "Você",
+   "start": 40.6,
+   "end": 40.8
+  },
+  {
+   "text": "aguentaria",
+   "start": 40.8,
+   "end": 41.26
+  },
+  {
+   "text": "24",
+   "start": 41.26,
+   "end": 41.66
+  },
+  {
+   "text": "horas?",
+   "start": 41.66,
+   "end": 42.1
+  },
+  {
+   "text": "Comenta",
+   "start": 42.5,
+   "end": 42.78
+  },
+  {
+   "text": "e",
+   "start": 42.78,
+   "end": 43.06
+  },
+  {
+   "text": "salva.",
+   "start": 43.06,
+   "end": 43.26
+  }
+ ]
+}

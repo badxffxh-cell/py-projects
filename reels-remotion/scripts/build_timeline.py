@@ -33,44 +33,47 @@ def build(timing):
     at, idx = finder(words)
     end = words[-1]["end"] + TAIL
 
+    blackout = at("agora?", edge="end") + 0.15
     # Marcos: clock value + darkness level of the scene
     marcos = [
-        {"t": 0.0, "clock": "00:00", "dark": 0.0},
-        {"t": at("Cinco"), "clock": "00:05", "dark": 0.12},
-        {"t": at("Uma"), "clock": "01:00", "dark": 0.28},
-        {"t": at("Seis"), "clock": "06:00", "dark": 0.42},
-        {"t": at("Doze"), "clock": "12:00", "dark": 0.56},
-        {"t": at("Vinte"), "clock": "24:00", "dark": 0.68},
-        {"t": at("22"), "clock": "22 DIAS", "dark": 0.74},
-        {"t": at("Você"), "clock": "22 DIAS", "dark": 0.85},
+        {"t": 0.0, "clock": "00:00", "level": 0},
+        {"t": blackout, "clock": "00:00", "level": 1},
+        {"t": at("Cinco"), "clock": "00:05", "level": 2},
+        {"t": at("Uma"), "clock": "01:00", "level": 3},
+        {"t": at("Seis"), "clock": "06:00", "level": 4},
+        {"t": at("Doze"), "clock": "12:00", "level": 5},
+        {"t": at("Vinte"), "clock": "24:00", "level": 6},
+        {"t": at("22"), "clock": "22 DIAS", "level": 6},
+        {"t": at("Você"), "clock": "22 DIAS", "level": 6},
     ]
 
-    blackout = at("agora?", edge="end") + 0.15
-    # Shots: image, start, transition in, optional label (text on screen)
+    # Shots: illustration ("art"), start, transition in, camera focus on the city
+    # photo [fx, fy, zoom_start, zoom_end], optional label (text on screen)
     shots = [
-        {"id": "hook", "img": "city_on", "t": 0.0, "in": "cut"},
-        {"id": "semaforo", "img": "traffic_off", "t": at("Cinco"), "in": "whip",
+        {"id": "hook", "art": None, "t": 0.0, "in": "cut", "focus": [0.5, 0.5, 1.0, 1.1]},
+        {"id": "semaforo", "art": "traffic", "t": at("Cinco"), "in": "whip", "focus": [0.72, 0.82, 1.7, 1.85],
          "label": {"t": at("Semáforos"), "text": "11.600 semáforos apagaram em NY (2003)"}},
-        {"id": "cartao", "img": "card_machine", "t": at("Cartão"), "in": "cut",
+        {"id": "cartao", "art": "card", "t": at("Cartão"), "in": "cut", "focus": [0.25, 0.62, 1.6, 1.75],
          "label": {"t": at("Cartão"), "text": "Espanha e Portugal, 2025"}},
-        {"id": "hospital", "img": "hospital", "t": at("Hospitais"), "in": "zoom",
+        {"id": "hospital", "art": "hospital", "t": at("Hospitais"), "in": "zoom", "focus": [0.6, 0.45, 1.5, 1.6],
          "label": {"t": at("Hospitais"), "text": "Gerador: até 10 s (norma dos EUA)"}},
-        {"id": "rede", "img": "people_phones", "t": at("Uma"), "in": "whip"},
-        {"id": "grafico", "img": "people_phones", "t": at("No", 0), "in": "match", "graphic": "chart17",
+        {"id": "rede", "art": "call", "t": at("Uma"), "in": "whip", "focus": [0.4, 0.33, 1.6, 1.75]},
+        {"id": "grafico", "art": "chart17", "t": at("No", 0), "in": "match", "focus": [0.4, 0.33, 1.75, 1.9],
          "label": {"t": at("Espanha,"), "text": "17% do normal · Espanha, 28/04/2025"}},
-        {"id": "torre", "img": "cell_tower", "t": at("Seis"), "in": "whip",
+        {"id": "torre", "art": "tower", "t": at("Seis"), "in": "whip", "focus": [0.62, 0.12, 1.6, 1.8],
          "label": {"t": at("baterias"), "text": "Bateria da torre: 2–8 h"}},
-        {"id": "semsinal", "img": "phone_hand", "t": at("Quando"), "in": "cut", "graphic": "nosignal",
-         "graphicT": at("some.")},
-        {"id": "geladeira", "img": "fridge_open", "t": at("Doze"), "in": "whip",
+        {"id": "semsinal", "art": "nosignal", "t": at("Quando"), "in": "cut", "focus": [0.2, 0.7, 1.7, 1.85],
+         "artT": at("some.")},
+        {"id": "geladeira", "art": "fridge", "t": at("Doze"), "in": "whip", "focus": [0.66, 0.6, 1.7, 1.85],
          "label": {"t": at("geladeira"), "text": "Geladeira fechada: ~4 h"}},
-        {"id": "agua", "img": "faucet", "t": at("Sem"), "in": "zoom",
+        {"id": "agua", "art": "faucet", "t": at("Sem"), "in": "zoom", "focus": [0.35, 0.86, 1.6, 1.75],
          "label": {"t": at("Sem"), "text": "Cleveland, 2003: sem pressão na água"}},
-        {"id": "vinte4", "img": "city_dark", "t": at("Vinte"), "in": "whip"},
-        {"id": "amapa", "img": "city_dark", "t": at("No", 1), "in": "zoom",
+        {"id": "vinte4", "art": None, "t": at("Vinte"), "in": "whip", "focus": [0.5, 0.5, 1.0, 1.06]},
+        {"id": "amapa", "art": None, "t": at("No", 1), "in": "zoom", "focus": [0.5, 0.42, 1.15, 1.3],
+         "artT": at("22"),
          "label": {"t": at("Amapá,"), "text": "Amapá, nov. 2020 · 13 de 16 municípios"}},
-        {"id": "final", "img": "city_on", "t": at("Você"), "in": "cut", "graphic": "cta",
-         "graphicT": at("Comenta")},
+        {"id": "final", "art": "cta", "t": at("Você"), "in": "cut", "focus": [0.5, 0.5, 1.0, 1.08],
+         "artT": at("Comenta")},
     ]
     for i, s in enumerate(shots):
         s["end"] = shots[i + 1]["t"] if i + 1 < len(shots) else end
@@ -83,7 +86,7 @@ def build(timing):
     for s in shots[1:]:
         if s["in"] == "whip":
             sfx.append({"file": "sfx_whoosh.wav", "t": max(0, s["t"] - 0.12), "gain": 0.45})
-    for m in marcos[1:6]:
+    for m in marcos[2:7]:
         sfx.append({"file": "sfx_tick.wav", "t": m["t"], "gain": 0.6})
 
     # Caption pages: 1-2 words, break after punctuation or long pairs

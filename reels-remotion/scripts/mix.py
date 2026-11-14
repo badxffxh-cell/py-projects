@@ -34,7 +34,7 @@ def main(video, voice, audio_dir, timeline_path, out):
         mix_labels.append(f"[s{k}]")
     filters.append(
         f"{''.join(mix_labels)}amix=inputs={len(mix_labels)}:normalize=0:duration=longest,"
-        f"atrim=0:{dur},loudnorm=I=-14:TP=-1.5:LRA=11,aresample=48000[aout]"
+        f"atrim=0:{dur},loudnorm=I=-14:TP=-1.5:LRA=11,aresample=48000,alimiter=limit=0.82:level=disabled[aout]"
     )
 
     cmd = [

@@ -9,6 +9,7 @@ import json
 import subprocess
 import sys
 
+import numpy as np
 from faster_whisper import WhisperModel
 
 sys.path.insert(0, __import__('os').path.dirname(__file__))
@@ -25,8 +26,15 @@ def audio_duration(path):
 
 def main(audio, out_path):
     model = WhisperModel("medium", device="cpu", compute_type="int8")
+    # Decode with ffmpeg (16 kHz mono float32): avoids faster-whisper's PyAV path,
+    # which breaks with PyAV 19 ("metadata_errors" keyword).
+    pcm = subprocess.run(
+        ["ffmpeg", "-v", "error", "-i", audio, "-ac", "1", "-ar", "16000", "-f", "f32le", "-"],
+        capture_output=True, check=True,
+    ).stdout
+    samples = np.frombuffer(pcm, dtype=np.float32)
     segments, _ = model.transcribe(
-        audio, language="pt", word_timestamps=True, initial_prompt=CAPTION_TEXT, beam_size=5
+        samples, language="pt", word_timestamps=True, initial_prompt=CAPTION_TEXT, beam_size=5
     )
     heard = [w for seg in segments for w in seg.words]
     print("whisper:", " ".join(w.word.strip() for w in heard))

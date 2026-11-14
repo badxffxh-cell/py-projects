@@ -1,19 +1,11 @@
 import { useEffect, useState } from "react";
-import {
-  AbsoluteFill,
-  Sequence,
-  continueRender,
-  delayRender,
-  interpolate,
-  staticFile,
-  useCurrentFrame,
-  useVideoConfig,
-} from "remotion";
+import { AbsoluteFill, Sequence, continueRender, delayRender, staticFile, useVideoConfig } from "remotion";
 import timelineJson from "../../public/apagao/timeline.json";
+import { ShotLayer } from "./Art";
 import { Captions } from "./Captions";
+import { CityBackground } from "./CityBackground";
 import { Clock } from "./Clock";
 import { H, SAFE, Timeline, W } from "./constants";
-import { LEAD, ShotView } from "./ShotView";
 
 export const timeline = timelineJson as unknown as Timeline;
 
@@ -38,42 +30,16 @@ const useFonts = () => {
   }, [handle]);
 };
 
-// Darkness follows the current marco, easing over ~0.6 s
-const useDarkness = () => {
-  const frame = useCurrentFrame();
+const ShotLayers: React.FC = () => {
   const { fps } = useVideoConfig();
-  const t = frame / fps;
-  const ms = timeline.marcos;
-  let i = 0;
-  ms.forEach((m, k) => {
-    if (t >= m.t) i = k;
-  });
-  const prev = ms[Math.max(0, i - 1)].dark;
-  return interpolate(t, [ms[i].t, ms[i].t + 0.6], [prev, ms[i].dark], {
-    extrapolateLeft: "clamp",
-    extrapolateRight: "clamp",
-  });
-};
-
-const Shots: React.FC<{ imgDir: string }> = ({ imgDir }) => {
-  const { fps } = useVideoConfig();
-  const dark = useDarkness();
-  const shots = timeline.shots;
   return (
     <>
-      {shots.map((s, i) => {
-        const lead = s.in === "whip" || s.in === "zoom" ? LEAD : 0;
-        const from = Math.max(0, Math.round(s.t * fps) - lead);
+      {timeline.shots.map((s) => {
+        const from = Math.round(s.t * fps);
         const to = Math.round(s.end * fps);
         return (
           <Sequence key={s.id} name={s.id} from={from} durationInFrames={Math.max(1, to - from)} layout="none">
-            <ShotView
-              shot={s}
-              next={shots[i + 1]}
-              dark={dark}
-              imgDir={imgDir}
-              hookFlicker={i === 0 ? timeline.blackout : undefined}
-            />
+            <ShotLayer shot={s} />
           </Sequence>
         );
       })}
@@ -99,7 +65,8 @@ export const Apagao: React.FC<ApagaoProps> = ({ imgDir, showSafe }) => {
   useFonts();
   return (
     <AbsoluteFill style={{ backgroundColor: "#000" }}>
-      <Shots imgDir={imgDir} />
+      <CityBackground shots={timeline.shots} marcos={timeline.marcos} blackout={timeline.blackout} imgDir={imgDir} />
+      <ShotLayers />
       <Clock marcos={timeline.marcos} blackout={timeline.blackout} />
       <Captions pages={timeline.captions} />
       {showSafe && <SafeGuide />}

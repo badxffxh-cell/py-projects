@@ -38,6 +38,27 @@ export const Clock: React.FC<{ marcos: Marco[]; blackout: number }> = ({ marcos,
 
   const pop = spring({ frame: since, fps, config: { damping: 12, stiffness: 180 }, durationInFrames: 14 });
   const scale = idx === 0 ? 1 : interpolate(pop, [0, 1], [1.25, 1]);
+
+  // Hero moment: from 24:00 ("22 DIAS" after it) the clock grows and moves to the centre until the final CTA
+  const firstDays = marcos.find((m) => m.clock === "24:00");
+  const last = marcos[marcos.length - 1];
+  let heroY = 0;
+  let heroScale = 1;
+  if (firstDays) {
+    const fIn = interpolate(frame, [firstDays.t * fps, firstDays.t * fps + 12], [0, 1], {
+      extrapolateLeft: "clamp",
+      extrapolateRight: "clamp",
+      easing: Easing.out(Easing.back(1.4)),
+    });
+    const fOut = interpolate(frame, [last.t * fps, last.t * fps + 10], [0, 1], {
+      extrapolateLeft: "clamp",
+      extrapolateRight: "clamp",
+      easing: Easing.inOut(Easing.cubic),
+    });
+    const hero = fIn * (1 - fOut);
+    heroY = hero * 420;
+    heroScale = 1 + hero * 0.55;
+  }
   const before = t < blackout;
   const color = isDays ? ALERT : before ? "rgba(255,255,255,0.85)" : "#fff";
 
@@ -52,6 +73,8 @@ export const Clock: React.FC<{ marcos: Marco[]; blackout: number }> = ({ marcos,
         flexDirection: "column",
         alignItems: "center",
         fontFamily: FONT,
+        transform: `translateY(${heroY}px) scale(${heroScale})`,
+        transformOrigin: "50% 0",
       }}
     >
       <div

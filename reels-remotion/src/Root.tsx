@@ -13,7 +13,7 @@ export const RemotionRoot: React.FC = () => {
         fps={30}
         width={1080}
         height={1920}
-        defaultProps={{ imgDir: "apagao/img_placeholder", showSafe: false } satisfies ApagaoProps}
+        defaultProps={{ imgDir: "apagao/img", showSafe: false } satisfies ApagaoProps}
       />
     </>
   );

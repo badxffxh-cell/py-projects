@@ -8,3 +8,5 @@ out
 public/apagao/audio/*.wav
 public/apagao/img_placeholder/
 __pycache__/
+public/apagao/voice/voice.wav
+public/apagao/img/city_lv*.png

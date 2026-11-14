@@ -11,16 +11,16 @@ export const ALERT = "#FF5A36";
 
 export type Word = { text: string; start: number; end: number };
 export type CaptionPage = { start: number; end: number; words: Word[] };
-export type Marco = { t: number; clock: string; dark: number };
+export type Marco = { t: number; clock: string; level: number };
 export type Shot = {
   id: string;
-  img: string;
+  art: string | null;
   t: number;
   end: number;
   in: "cut" | "whip" | "zoom" | "match";
+  focus: [number, number, number, number]; // fx, fy, zoom start, zoom end
   label?: { t: number; text: string };
-  graphic?: "chart17" | "nosignal" | "cta";
-  graphicT?: number;
+  artT?: number;
 };
 export type Timeline = {
   fps: number;
