@@ -7,3 +7,4 @@ dist
 out
 public/apagao/audio/*.wav
 public/apagao/img_placeholder/
+__pycache__/
