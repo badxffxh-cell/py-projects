@@ -1,0 +1,184 @@
+@import "tailwindcss";
+
+/* ------------------------------------------------------------------
+   FERVOR — design tokens
+   Orange + black, warm undertones everywhere (never pure #000/#fff).
+------------------------------------------------------------------- */
+@theme {
+  --color-ink: #0a0706;
+  --color-coal: #110c0a;
+  --color-char: #1a1310;
+  --color-smoke: #2a211d;
+  --color-ash: #8c7c72;
+  --color-bone: #e6d9c9;
+  --color-cream: #f7efe4;
+  --color-flame: #ff5b1f;
+  --color-blaze: #ff7a2c;
+  --color-ember: #e2410b;
+  --color-amber: #ffa23a;
+  --color-chili: #a3240b;
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+  --ease-in-out-quart: cubic-bezier(0.76, 0, 0.24, 1);
+
+  --animate-grain: grain 0.9s steps(6) infinite;
+  --animate-spin-slow: spin 14s linear infinite;
+  --animate-float: float 6s ease-in-out infinite;
+
+  @keyframes grain {
+    0% { transform: translate3d(0, 0, 0); }
+    20% { transform: translate3d(-4%, 3%, 0); }
+    40% { transform: translate3d(3%, -5%, 0); }
+    60% { transform: translate3d(-6%, -2%, 0); }
+    80% { transform: translate3d(5%, 4%, 0); }
+    100% { transform: translate3d(-2%, 6%, 0); }
+  }
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+  }
+}
+
+@theme inline {
+  --font-display: var(--font-anton), "Impact", "Arial Narrow", sans-serif;
+  --font-serif: var(--font-instrument), "Times New Roman", serif;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains), ui-monospace, "SFMono-Regular", monospace;
+}
+
+/* ------------------------------------------------------------------
+   Layering contract (root stacking context):
+   0  section backgrounds   5  "behind the jar" type
+   10 WebGL canvas (fixed)  20 section content
+   40 nav                   50 grain   60 cursor
+   70 cart / menus          80 preloader
+   Section roots must never create a stacking context (no transform,
+   opacity, filter) or the canvas can no longer sit between layers.
+------------------------------------------------------------------- */
+
+:root {
+  color-scheme: dark;
+  --stage: #0a0706;
+}
+
+html {
+  background: var(--color-ink);
+  -webkit-text-size-adjust: 100%;
+  text-rendering: optimizeLegibility;
+  scrollbar-gutter: stable;
+  scrollbar-color: var(--color-flame) var(--color-ink);
+  scrollbar-width: thin;
+}
+
+html.scroll-locked {
+  overflow: hidden;
+}
+
+body {
+  background: var(--color-ink);
+  color: var(--color-cream);
+  font-family: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  overflow-x: clip;
+}
+
+::selection {
+  background: var(--color-flame);
+  color: var(--color-ink);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-flame);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* Lenis */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+/* Hide the native cursor only when the custom cursor is live */
+@media (hover: hover) and (pointer: fine) {
+  html.has-cursor,
+  html.has-cursor * {
+    cursor: none !important;
+  }
+}
+
+/* ------------------------------------------------------------------
+   Utilities
+------------------------------------------------------------------- */
+@utility text-outline {
+  color: transparent;
+  -webkit-text-stroke: 1.5px currentColor;
+}
+
+@utility text-balance {
+  text-wrap: balance;
+}
+
+@utility no-scrollbar {
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* Charcoal: soft fractal noise + ember glow, used on dark sections */
+@utility tex-charcoal {
+  background-color: var(--color-ink);
+  background-image:
+    radial-gradient(120% 80% at 50% 0%, rgb(255 91 31 / 0.07), transparent 60%),
+    radial-gradient(90% 60% at 100% 100%, rgb(255 122 44 / 0.05), transparent 60%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='320'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.9 0 0 0 0 0.8 0 0 0 0 0.7 0 0 0 .06 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Hot orange paper with halftone print dots */
+@utility tex-flame {
+  background-color: var(--color-flame);
+  background-image:
+    radial-gradient(rgb(10 7 6 / 0.13) 1px, transparent 1.6px),
+    radial-gradient(140% 90% at 20% 0%, rgb(255 162 58 / 0.55), transparent 60%),
+    radial-gradient(120% 90% at 100% 100%, rgb(163 36 11 / 0.45), transparent 60%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='260'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.7' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.05 0 0 0 0 0.02 0 0 0 0 0 0 0 0 .10 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 7px 7px, 100% 100%, 100% 100%, 260px 260px;
+}
+
+/* Fine ruled lines, like a ledger — for cards */
+@utility tex-ruled {
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent 0 23px,
+    rgb(247 239 228 / 0.045) 23px 24px
+  );
+}
+
+/* Masked line for word/char reveal animations */
+@utility reveal-mask {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: top;
+  padding-bottom: 0.06em;
+  margin-bottom: -0.06em;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
