@@ -1,7 +1,4 @@
-"use client";
-
-import { useEffect } from "react";
-import dynamic from "next/dynamic";
+import { lazy, Suspense, useEffect } from "react";
 import { useUI } from "@/lib/store";
 import { hasWebGL } from "@/lib/utils";
 import { SmoothScroll } from "./providers/SmoothScroll";
@@ -14,9 +11,10 @@ import { CartDrawer } from "./cart/CartDrawer";
 import { FlyToCart } from "./cart/FlyToCart";
 import { Toaster } from "./cart/Toaster";
 
-const SceneCanvas = dynamic(() => import("./canvas/SceneCanvas"), { ssr: false });
+// three.js + R3F load as a separate chunk, only in the browser and only with WebGL.
+const SceneCanvas = lazy(() => import("./canvas/SceneCanvas"));
 
-/** Client-only global layers: smooth scroll, the WebGL stage and overlays. */
+/** Global layers: smooth scroll, the WebGL stage and overlays. */
 export function Experience() {
   const webgl = useUI((s) => s.webgl);
 
@@ -28,7 +26,11 @@ export function Experience() {
     <>
       <SmoothScroll />
       <ScrollChoreography />
-      {webgl && <SceneCanvas />}
+      {webgl && (
+        <Suspense fallback={null}>
+          <SceneCanvas />
+        </Suspense>
+      )}
       <Nav />
       <CartDrawer />
       <FlyToCart />

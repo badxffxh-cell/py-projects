@@ -20,7 +20,7 @@ const TICKER = [
   "No preservatives, ever",
 ];
 
-export default function Home() {
+export default function App() {
   return (
     <>
       <a

@@ -1,5 +1,3 @@
-"use client";
-
 import { useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { ScrollTrigger, gsap, useGSAP } from "@/lib/gsap";
@@ -8,7 +6,8 @@ import { FLAVORS, formatPrice } from "@/lib/products";
 import { useUI } from "@/lib/store";
 import { cn } from "@/lib/utils";
 import { AddToCartButton } from "../cart/AddToCart";
-import { EASE_OUT_EXPO, HeatMeter } from "../ui/Motion";
+import { HeatMeter } from "../ui/Motion";
+import { EASE_OUT_EXPO } from "@/lib/motion";
 
 /**
  * Pinned flavour theatre. Scroll advances through the four sauces: the

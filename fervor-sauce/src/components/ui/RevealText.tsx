@@ -1,5 +1,3 @@
-"use client";
-
 import { useRef, type ElementType } from "react";
 import { gsap, useGSAP } from "@/lib/gsap";
 import { cn, prefersReducedMotion } from "@/lib/utils";

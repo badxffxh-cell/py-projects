@@ -1,5 +1,3 @@
-"use client";
-
 import { useId, useState } from "react";
 import { AnimatePresence, LayoutGroup, motion } from "framer-motion";
 import {
@@ -15,7 +13,8 @@ import { useUI } from "@/lib/store";
 import { cn } from "@/lib/utils";
 import { AddToCartButton } from "../cart/AddToCart";
 import { MinusIcon, PlusIcon, RotateIcon, StarIcon } from "../ui/Icons";
-import { EASE_OUT_EXPO, FadeIn, HeatMeter } from "../ui/Motion";
+import { FadeIn, HeatMeter } from "../ui/Motion";
+import { EASE_OUT_EXPO } from "@/lib/motion";
 
 /**
  * Product configurator. The 3D jar on the left follows the selected flavour

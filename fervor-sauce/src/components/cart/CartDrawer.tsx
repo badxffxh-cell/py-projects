@@ -1,5 +1,3 @@
-"use client";
-
 import { useEffect, useRef } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { lockScroll } from "@/lib/lenis";
@@ -14,8 +12,8 @@ import {
 import { cartCount, cartSubtotal, linePrice, useCart, useUI, type CartLine } from "@/lib/store";
 import { CloseIcon, FlameIcon, MinusIcon, PlusIcon } from "../ui/Icons";
 import { JarIllustration } from "../ui/JarIllustration";
-import { EASE_OUT_EXPO } from "../ui/Motion";
-import { useAddToCart } from "./AddToCart";
+import { EASE_OUT_EXPO } from "@/lib/motion";
+import { useAddToCart } from "./useAddToCart";
 
 export function CartDrawer() {
   const open = useUI((s) => s.cartOpen);

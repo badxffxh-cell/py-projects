@@ -1,5 +1,3 @@
-"use client";
-
 import { useRef } from "react";
 import { motion, useMotionTemplate, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { BUNDLE, FLAVORS, type Flavor, formatPrice } from "@/lib/products";
@@ -9,7 +7,8 @@ import { cn } from "@/lib/utils";
 import { AddToCartButton } from "../cart/AddToCart";
 import { ArrowUpRight } from "../ui/Icons";
 import { JarIllustration } from "../ui/JarIllustration";
-import { EASE_OUT_EXPO, FadeIn, HeatMeter } from "../ui/Motion";
+import { FadeIn, HeatMeter } from "../ui/Motion";
+import { EASE_OUT_EXPO } from "@/lib/motion";
 import { RevealText } from "../ui/RevealText";
 import { TornEdge } from "../ui/TornEdge";
 

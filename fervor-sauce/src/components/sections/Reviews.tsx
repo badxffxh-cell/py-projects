@@ -1,5 +1,3 @@
-"use client";
-
 import { PRESS, REVIEWS } from "@/lib/products";
 import { cn } from "@/lib/utils";
 import { FlameIcon, StarIcon } from "../ui/Icons";

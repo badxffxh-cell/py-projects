@@ -1,10 +1,8 @@
-"use client";
-
 import { useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useUI, type Toast } from "@/lib/store";
 import { CloseIcon, FlameIcon } from "../ui/Icons";
-import { EASE_OUT_EXPO } from "../ui/Motion";
+import { EASE_OUT_EXPO } from "@/lib/motion";
 
 export function Toaster() {
   const toasts = useUI((s) => s.toasts);

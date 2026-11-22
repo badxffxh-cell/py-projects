@@ -1,29 +1,12 @@
-"use client";
-
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { type CartLine, useCart, useUI } from "@/lib/store";
+import type { CartLine } from "@/lib/store";
+import { useAddToCart } from "./useAddToCart";
 import { cn } from "@/lib/utils";
 import { CheckIcon, PlusIcon } from "../ui/Icons";
-import { EASE_OUT_EXPO } from "../ui/Motion";
+import { EASE_OUT_EXPO } from "@/lib/motion";
 
 type NewLine = Omit<CartLine, "key" | "qty">;
-
-/** Adds to the cart, launches the fly-to-cart sprite and raises a toast. */
-export function useAddToCart() {
-  return useCallback(
-    (line: NewLine, opts: { from?: Element | null; color: string; title: string; body?: string; qty?: number }) => {
-      useCart.getState().add(line, opts.qty ?? 1);
-      const ui = useUI.getState();
-      if (opts.from) {
-        const r = opts.from.getBoundingClientRect();
-        ui.launchFlight({ x: r.left + r.width / 2, y: r.top + r.height / 2, color: opts.color });
-      } else ui.bumpCart();
-      ui.pushToast({ title: opts.title, body: opts.body, color: opts.color });
-    },
-    [],
-  );
-}
 
 interface AddToCartButtonProps {
   line: NewLine;

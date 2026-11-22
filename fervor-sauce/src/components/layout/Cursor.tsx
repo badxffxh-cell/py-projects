@@ -1,5 +1,3 @@
-"use client";
-
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion, useMotionValue, useSpring } from "framer-motion";
 import { drag, jarRect } from "@/lib/sceneState";

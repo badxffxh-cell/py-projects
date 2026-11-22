@@ -1,5 +1,3 @@
-"use client";
-
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { gsap } from "@/lib/gsap";
@@ -8,9 +6,9 @@ import { scroll } from "@/lib/sceneState";
 import { cartCount, useCart, useUI } from "@/lib/store";
 import { cn } from "@/lib/utils";
 import { BagIcon, CloseIcon, FlameIcon, MenuIcon } from "../ui/Icons";
-import { EASE_OUT_EXPO } from "../ui/Motion";
+import { EASE_OUT_EXPO } from "@/lib/motion";
 
-export const NAV_LINKS = [
+const NAV_LINKS = [
   { href: "#story", label: "Story" },
   { href: "#ingredients", label: "Ingredients" },
   { href: "#flavors", label: "Flavors" },

@@ -1,5 +1,3 @@
-"use client";
-
 import { useRef, type ReactNode } from "react";
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { cn } from "@/lib/utils";
@@ -131,6 +129,8 @@ export function MagneticButton({
       onPointerMove={onMove}
       onPointerEnter={onEnter}
       onPointerLeave={onLeave}
+      whileTap={{ scale: 0.95 }}
+      transition={{ type: "spring", stiffness: 500, damping: 22 }}
     >
       {href ? (
         <a href={href} className={cls} data-cursor={cursor} aria-label={ariaLabel} onClick={onClick}>

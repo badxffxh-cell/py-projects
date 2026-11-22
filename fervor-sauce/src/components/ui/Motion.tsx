@@ -1,11 +1,9 @@
-"use client";
-
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { animate, motion, useInView, useReducedMotion } from "framer-motion";
 import { cn } from "@/lib/utils";
+import { EASE_OUT_EXPO } from "@/lib/motion";
 import { FlameIcon } from "./Icons";
 
-export const EASE_OUT_EXPO = [0.16, 1, 0.3, 1] as const;
 
 export function FadeIn({
   children,

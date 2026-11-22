@@ -5,17 +5,32 @@ photorealistic 3D sauce jar is the hero of the whole page: it floats with its li
 screws itself shut, travels between sections, bursts spices around its ingredients and burns its label away to
 reveal each new flavor.
 
-**Stack:** Next.js 16 (App Router, Turbopack) · React 19 · Tailwind CSS v4 · React Three Fiber + drei ·
-GSAP ScrollTrigger · Framer Motion · Lenis (smooth scroll) · Zustand (cart).
+**Stack:** React 19 + Vite · TypeScript · Tailwind CSS v4 · React Three Fiber + drei · GSAP ScrollTrigger ·
+Framer Motion · Lenis (smooth scroll, also on touch) · Zustand (cart) · self-hosted @fontsource fonts.
+
+> The first version was built on Next.js 16 (see git history). It was moved to plain React + Vite so it can be
+> imported and published on [Lovable](https://lovable.dev), which builds React apps but not Next.js.
 
 ## Run it
 
+Node.js 20.19+ (22 recommended).
+
 ```bash
 npm install
-npm run dev     # http://localhost:3000
-npm run build && npm start
+npm run dev       # http://localhost:8080
+npm run build     # static site in dist/
+npm run preview   # serve the production build
 npm run lint
 ```
+
+## Publish on Lovable
+
+Lovable can't import directly from a GitHub URL. Zip this folder **without** `node_modules` and `dist`, then on
+the Lovable dashboard use **+ → Import project → Upload code**, attach the ZIP and add a prompt asking it to keep
+the code, libraries and visuals unchanged. When the preview looks right, click **Publish**.
+
+The output of `npm run build` is a fully static site (`dist/`), so it can also go on any static host (Netlify,
+Vercel, Cloudflare Pages, GitHub Pages…).
 
 ## What's on the page
 
@@ -70,6 +85,9 @@ canvas itself never blocks the page.
 
 - Semantic sections and headings, an `sr-only` h1, skip link, labelled controls, focus-visible styles.
 - `prefers-reduced-motion` turns off smooth scrolling and scroll reveals, shortens the intro and slows the marquees.
+- Phones: Lenis `syncTouch` gives the same inertial smooth scroll as desktop, a horizontal swipe on the jar spins
+  it, the gyroscope tilts the jar and its reflections (Android; iOS gets a gentle ambient sway instead, so no
+  permission prompt is ever shown), and buttons spring on tap.
 - Quality tiers (texture size, particle counts, geometry detail) plus drei's `PerformanceMonitor` for DPR.
 - Falls back to an SVG jar and DOM wordmark when WebGL is unavailable.
 

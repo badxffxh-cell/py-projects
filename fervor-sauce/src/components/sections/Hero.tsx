@@ -1,5 +1,3 @@
-"use client";
-
 import { useRef } from "react";
 import { motion } from "framer-motion";
 import { gsap, useGSAP } from "@/lib/gsap";
@@ -9,7 +7,7 @@ import { useUI } from "@/lib/store";
 import { ArrowDown, ArrowRight, StarIcon } from "../ui/Icons";
 import { JarIllustration } from "../ui/JarIllustration";
 import { MagneticButton } from "../ui/MagneticButton";
-import { EASE_OUT_EXPO } from "../ui/Motion";
+import { EASE_OUT_EXPO } from "@/lib/motion";
 import { RevealText } from "../ui/RevealText";
 
 const fade = (delay: number, show: boolean) => ({

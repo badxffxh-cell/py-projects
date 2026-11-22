@@ -1,5 +1,3 @@
-"use client";
-
 import { useEffect } from "react";
 import { ScrollTrigger } from "@/lib/gsap";
 import { clearTransitions, easeInOut, setTransitions, type PoseName, type Transition } from "@/lib/choreography";

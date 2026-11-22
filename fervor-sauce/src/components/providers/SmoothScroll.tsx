@@ -1,5 +1,3 @@
-"use client";
-
 import { useEffect } from "react";
 import Lenis from "lenis";
 import { gsap, ScrollTrigger } from "@/lib/gsap";
@@ -20,7 +18,12 @@ export function SmoothScroll() {
     const lenis = new Lenis({
       lerp: 0.09,
       wheelMultiplier: 0.95,
-      touchMultiplier: 1.4,
+      // Phones and tablets get the same buttery, inertial scroll as desktop:
+      // Lenis drives touch scrolling itself instead of handing it to the OS.
+      syncTouch: true,
+      syncTouchLerp: 0.085,
+      touchInertiaExponent: 1.75,
+      touchMultiplier: 1.15,
       anchors: { offset: 0, duration: 1.6 },
       stopInertiaOnNavigate: true,
     });

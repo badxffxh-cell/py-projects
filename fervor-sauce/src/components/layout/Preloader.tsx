@@ -1,5 +1,3 @@
-"use client";
-
 import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { gsap } from "@/lib/gsap";
@@ -8,7 +6,7 @@ import { intro } from "@/lib/sceneState";
 import { useUI } from "@/lib/store";
 import { prefersReducedMotion } from "@/lib/utils";
 import { FlameIcon } from "../ui/Icons";
-import { EASE_OUT_EXPO } from "../ui/Motion";
+import { EASE_OUT_EXPO } from "@/lib/motion";
 
 const STEPS = ["Sourcing chiles", "Charring over oak", "Fermenting 30 days", "Hand-numbering jars"];
 

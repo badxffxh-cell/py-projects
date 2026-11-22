@@ -60,6 +60,12 @@
 :root {
   color-scheme: dark;
   --stage: #0a0706;
+  /* Self-hosted @fontsource families (imported in main.tsx). The 3D label
+     renderer reads these same variables to print the jar label. */
+  --font-anton: "Anton", "Impact", "Arial Narrow", sans-serif;
+  --font-instrument: "Instrument Serif", "Times New Roman", serif;
+  --font-inter: "Inter Tight Variable", "Inter Tight", ui-sans-serif, system-ui, sans-serif;
+  --font-jetbrains: "JetBrains Mono", ui-monospace, "SFMono-Regular", monospace;
 }
 
 html {

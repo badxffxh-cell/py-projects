@@ -1,9 +1,7 @@
-"use client";
-
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { ArrowRight, CheckIcon, FlameIcon } from "../ui/Icons";
-import { EASE_OUT_EXPO } from "../ui/Motion";
+import { EASE_OUT_EXPO } from "@/lib/motion";
 import { RevealText } from "../ui/RevealText";
 
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;

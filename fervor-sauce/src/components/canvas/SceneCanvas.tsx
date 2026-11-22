@@ -1,11 +1,11 @@
-"use client";
-
 import { Suspense, useEffect, useRef, useState } from "react";
 import { Canvas } from "@react-three/fiber";
 import { PerformanceMonitor } from "@react-three/drei";
 import * as THREE from "three";
 import { useUI } from "@/lib/store";
-import { drag, jarRect } from "@/lib/sceneState";
+import { gsap } from "@/lib/gsap";
+import { lockScroll } from "@/lib/lenis";
+import { drag, jarRect, pointer } from "@/lib/sceneState";
 import { Scene } from "./Scene";
 import { detectQuality, jarWorld } from "./quality";
 
@@ -21,6 +21,7 @@ export default function SceneCanvas() {
   const setSceneReady = useUI((s) => s.setSceneReady);
 
   useJarDrag();
+  useMobileMotion();
 
   return (
     <>
@@ -87,7 +88,11 @@ function JarGlow() {
   );
 }
 
-/** Grab-and-spin the jar with the mouse (touch keeps native scrolling). */
+/**
+ * Grab-and-spin the jar. Mouse: press and drag. Touch: a mostly horizontal
+ * swipe that starts on the jar spins it (scroll is held while spinning);
+ * vertical swipes keep scrolling the page as usual.
+ */
 function useJarDrag() {
   useEffect(() => {
     const interactive = (el: EventTarget | null) =>
@@ -99,18 +104,45 @@ function useJarDrag() {
       x <= jarRect.x + jarRect.w + 24 &&
       y >= jarRect.y &&
       y <= jarRect.y + jarRect.h;
+    const overlayOpen = () => {
+      const ui = useUI.getState();
+      return ui.cartOpen || ui.menuOpen;
+    };
 
-    const down = (e: PointerEvent) => {
-      if (e.pointerType !== "mouse" || e.button !== 0) return;
-      if (!inside(e.clientX, e.clientY) || interactive(e.target)) return;
+    let touch: { id: number; x0: number; y0: number; spinning: boolean } | null = null;
+
+    const begin = (x: number) => {
       drag.active = true;
-      drag.lastX = e.clientX;
+      drag.lastX = x;
       drag.lastT = performance.now();
       drag.velocity = 0;
-      document.documentElement.classList.add("is-grabbing");
-      e.preventDefault();
     };
+
+    const down = (e: PointerEvent) => {
+      if (overlayOpen() || !inside(e.clientX, e.clientY) || interactive(e.target)) return;
+      if (e.pointerType === "mouse") {
+        if (e.button !== 0) return;
+        begin(e.clientX);
+        document.documentElement.classList.add("is-grabbing");
+        e.preventDefault();
+      } else if (e.pointerType === "touch" && e.isPrimary) {
+        touch = { id: e.pointerId, x0: e.clientX, y0: e.clientY, spinning: false };
+      }
+    };
+
     const move = (e: PointerEvent) => {
+      if (touch && e.pointerId === touch.id && !touch.spinning) {
+        const dx = e.clientX - touch.x0;
+        const dy = e.clientY - touch.y0;
+        if (Math.abs(dx) > 12 && Math.abs(dx) > Math.abs(dy) * 1.3) {
+          touch.spinning = true;
+          begin(e.clientX);
+          lockScroll(true);
+        } else if (Math.abs(dy) > 12) {
+          touch = null; // a vertical swipe: let the page scroll
+        }
+        return;
+      }
       if (!drag.active) return;
       const now = performance.now();
       const dt = Math.max(4, now - drag.lastT) / 1000;
@@ -121,22 +153,89 @@ function useJarDrag() {
       drag.lastX = e.clientX;
       drag.lastT = now;
     };
+
     const up = () => {
+      if (touch?.spinning) lockScroll(false);
+      touch = null;
       if (!drag.active) return;
       drag.active = false;
       document.documentElement.classList.remove("is-grabbing");
     };
+
+    // While a finger is spinning the jar, stop the browser from panning.
+    const holdTouch = (e: TouchEvent) => {
+      if (touch?.spinning && e.cancelable) e.preventDefault();
+    };
+
     window.addEventListener("pointerdown", down);
     window.addEventListener("pointermove", move, { passive: true });
     window.addEventListener("pointerup", up);
     window.addEventListener("pointercancel", up);
     window.addEventListener("blur", up);
+    window.addEventListener("touchmove", holdTouch, { passive: false });
     return () => {
+      up();
       window.removeEventListener("pointerdown", down);
       window.removeEventListener("pointermove", move);
       window.removeEventListener("pointerup", up);
       window.removeEventListener("pointercancel", up);
       window.removeEventListener("blur", up);
+      window.removeEventListener("touchmove", holdTouch);
+    };
+  }, []);
+}
+
+/**
+ * Phones have no hover, so the scene borrows motion from elsewhere: the
+ * gyroscope tilts the jar and slides its reflections (where the browser
+ * allows it without a permission prompt), a lifted finger stops pushing
+ * spices around, and with no input at all the light slowly sways on its own.
+ */
+function useMobileMotion() {
+  useEffect(() => {
+    if (!window.matchMedia("(pointer: coarse)").matches) return;
+    let gyro = false;
+    let lastTouch = -1e9;
+    const clamp1 = (v: number) => Math.max(-1, Math.min(1, v));
+
+    const onOrient = (e: DeviceOrientationEvent) => {
+      if (e.gamma == null || e.beta == null) return;
+      gyro = true;
+      if (performance.now() - lastTouch < 1500) return; // a finger on screen wins
+      pointer.x = clamp1(e.gamma / 28);
+      pointer.y = clamp1(-(e.beta - 50) / 28);
+    };
+    const onTouch = (e: PointerEvent) => {
+      if (e.pointerType === "touch") lastTouch = performance.now();
+    };
+    const onLift = (e: PointerEvent) => {
+      if (e.pointerType === "touch") pointer.moved = false;
+    };
+    const ambient = () => {
+      if (gyro || performance.now() - lastTouch < 2500) return;
+      const t = performance.now() / 1000;
+      pointer.x = Math.sin(t * 0.35) * 0.35;
+      pointer.y = Math.sin(t * 0.27 + 1) * 0.2;
+    };
+
+    // iOS only delivers orientation after an explicit permission prompt — we
+    // never trigger one unprompted, so iPhones get the ambient sway instead.
+    const needsPermission =
+      typeof (DeviceOrientationEvent as unknown as { requestPermission?: unknown }).requestPermission ===
+      "function";
+    if (!needsPermission) window.addEventListener("deviceorientation", onOrient);
+    window.addEventListener("pointerdown", onTouch, { passive: true });
+    window.addEventListener("pointermove", onTouch, { passive: true });
+    window.addEventListener("pointerup", onLift, { passive: true });
+    window.addEventListener("pointercancel", onLift, { passive: true });
+    gsap.ticker.add(ambient);
+    return () => {
+      window.removeEventListener("deviceorientation", onOrient);
+      window.removeEventListener("pointerdown", onTouch);
+      window.removeEventListener("pointermove", onTouch);
+      window.removeEventListener("pointerup", onLift);
+      window.removeEventListener("pointercancel", onLift);
+      gsap.ticker.remove(ambient);
     };
   }, []);
 }
