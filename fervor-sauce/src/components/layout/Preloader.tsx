@@ -29,7 +29,7 @@ export function Preloader() {
   }, [sceneReady, webgl]);
 
   useEffect(() => {
-    lockScroll(true);
+    lockScroll("preloader", true);
     const reduce = prefersReducedMotion();
     const start = performance.now();
     let raf = 0;
@@ -61,11 +61,15 @@ export function Preloader() {
       raf = requestAnimationFrame(loop);
     };
     raf = requestAnimationFrame(loop);
-    return () => cancelAnimationFrame(raf);
+    return () => {
+      cancelAnimationFrame(raf);
+      // balanced with the lock above (StrictMode mounts effects twice in dev)
+      lockScroll("preloader", false);
+    };
   }, []);
 
   const onExitComplete = () => {
-    lockScroll(false);
+    lockScroll("preloader", false);
     setIntroDone();
   };
 

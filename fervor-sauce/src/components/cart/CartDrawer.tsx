@@ -30,7 +30,7 @@ export function CartDrawer() {
 
   useEffect(() => {
     if (!open) return;
-    lockScroll(true);
+    lockScroll("cart", true);
     const prev = document.activeElement as HTMLElement | null;
     const t = window.setTimeout(() => panel.current?.querySelector<HTMLElement>("button")?.focus(), 80);
     const onKey = (e: KeyboardEvent) => {
@@ -52,7 +52,7 @@ export function CartDrawer() {
     window.addEventListener("keydown", onKey);
     return () => {
       window.clearTimeout(t);
-      lockScroll(false);
+      lockScroll("cart", false);
       window.removeEventListener("keydown", onKey);
       prev?.focus?.();
     };

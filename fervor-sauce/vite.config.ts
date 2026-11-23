@@ -8,8 +8,9 @@ export default defineConfig({
   resolve: {
     alias: { "@": fileURLToPath(new URL("./src", import.meta.url)) },
   },
-  // same dev-server convention as Lovable's Vite projects
-  server: { host: "::", port: 8080 },
+  // all network interfaces, IPv6 when the machine has it and IPv4 otherwise
+  // ("::" alone crashes on machines without IPv6)
+  server: { host: true, port: 8080 },
   build: {
     // three.js + R3F live in their own lazily loaded chunk
     chunkSizeWarningLimit: 1600,

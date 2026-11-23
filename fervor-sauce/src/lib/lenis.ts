@@ -1,11 +1,12 @@
 import type Lenis from "lenis";
 
 let instance: Lenis | null = null;
-let locks = 0;
+/** Who is currently holding the page still (preloader, cart, menu, jar spin). */
+const owners = new Set<string>();
 
 export const setLenis = (l: Lenis | null) => {
   instance = l;
-  if (l && locks > 0) l.stop();
+  if (l && owners.size > 0) l.stop();
 };
 
 export const getLenis = () => instance;
@@ -36,10 +37,15 @@ export function scrollToTarget(
   }
 }
 
-/** Reference-counted scroll lock (drawer + menu can overlap). */
-export const lockScroll = (locked: boolean) => {
-  locks = Math.max(0, locks + (locked ? 1 : -1));
-  const shouldLock = locks > 0;
+/**
+ * Named scroll locks. Each owner either holds the page or not, so locking or
+ * unlocking twice is harmless — React StrictMode runs effects twice in
+ * development, and a plain counter used to leave the page frozen there.
+ */
+export const lockScroll = (owner: string, locked: boolean) => {
+  if (locked) owners.add(owner);
+  else owners.delete(owner);
+  const shouldLock = owners.size > 0;
   if (instance) {
     if (shouldLock) instance.stop();
     else instance.start();

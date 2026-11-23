@@ -167,11 +167,11 @@ function MobileMenu() {
 
   useEffect(() => {
     if (!open) return;
-    lockScroll(true);
+    lockScroll("menu", true);
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
     window.addEventListener("keydown", onKey);
     return () => {
-      lockScroll(false);
+      lockScroll("menu", false);
       window.removeEventListener("keydown", onKey);
     };
   }, [open, setOpen]);

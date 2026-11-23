@@ -137,7 +137,7 @@ function useJarDrag() {
         if (Math.abs(dx) > 12 && Math.abs(dx) > Math.abs(dy) * 1.3) {
           touch.spinning = true;
           begin(e.clientX);
-          lockScroll(true);
+          lockScroll("jar-spin", true);
         } else if (Math.abs(dy) > 12) {
           touch = null; // a vertical swipe: let the page scroll
         }
@@ -155,7 +155,7 @@ function useJarDrag() {
     };
 
     const up = () => {
-      if (touch?.spinning) lockScroll(false);
+      if (touch?.spinning) lockScroll("jar-spin", false);
       touch = null;
       if (!drag.active) return;
       drag.active = false;
